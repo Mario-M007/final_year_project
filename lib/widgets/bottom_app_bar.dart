@@ -14,7 +14,7 @@ class _CustomBottomAppBarState extends State<StatefulWidget> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Get the current route and set the selected index accordingly
-    String currentRoute = ModalRoute.of(context)!.settings.name!;
+    String? currentRoute = ModalRoute.of(context)!.settings.name;
     switch (currentRoute) {
       case '/home':
         _selectedIndex = 0;

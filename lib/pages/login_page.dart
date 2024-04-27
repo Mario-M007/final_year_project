@@ -24,6 +24,12 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await _authService.signInWithEmailAndPassword(
           emailController.text, passwordController.text);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ),
+      );
     } catch (error) {
       showDialog(
         context: context,
@@ -32,13 +38,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     }
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomePage(),
-      ),
-    );
   }
 
   @override

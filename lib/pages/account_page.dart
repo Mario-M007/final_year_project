@@ -1,3 +1,4 @@
+import 'package:final_year_project/services/auth/auth_gate.dart';
 import 'package:final_year_project/services/auth/auth_service.dart';
 import 'package:final_year_project/widgets/bottom_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -5,10 +6,20 @@ import 'package:flutter/material.dart';
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
 
-  void logOut() {
+  void logOut(BuildContext context) async {
     final _authService = AuthService();
-    _authService.signOut();
-    print('signed out');
+    try {
+      await _authService.signOut();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const AuthGate(),
+        ),
+      );
+      print('signed out');
+    } catch (error) {
+      print(error.toString());
+    }
   }
 
   @override
@@ -64,7 +75,7 @@ class AccountPage extends StatelessWidget {
                 padding: const EdgeInsetsDirectional.symmetric(vertical: 20),
                 child: TextButton(
                   onPressed: () {
-                    logOut();
+                    logOut(context);
                   },
                   child: Row(
                     children: [
