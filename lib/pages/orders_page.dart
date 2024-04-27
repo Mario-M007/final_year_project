@@ -20,11 +20,11 @@ class _OrderPageState extends State<OrderPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset('lib/assets/cart.png'),
-                  Text(
+                  const Text(
                     'Add items to start a basket',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Container(
+                  const SizedBox(
                     width: 300,
                     child: Text(
                       'Once you add items from a restuarant or store, your basket will appear here.',
@@ -45,13 +45,13 @@ class _OrderPageState extends State<OrderPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.remove),
+                        icon: const Icon(Icons.remove),
                         onPressed: () {
                           _removeItem(itemName);
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.add),
+                        icon: const Icon(Icons.add),
                         onPressed: () {
                           _addItem(itemName);
                         },
@@ -67,9 +67,9 @@ class _OrderPageState extends State<OrderPage> {
           _addItem('Item ${items.length + 1}');
         },
         tooltip: 'Add Item',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
-      bottomNavigationBar: CustomBottomAppBar(),
+      bottomNavigationBar: const CustomBottomAppBar(),
     );
   }
 

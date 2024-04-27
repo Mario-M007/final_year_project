@@ -5,17 +5,17 @@ class RestaurantCard extends StatelessWidget {
   final String restaurantName;
 
   const RestaurantCard({
-    Key? key,
+    super.key,
     required this.restaurantImgPath,
     required this.restaurantName,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.transparent)),
-      onPressed: () => print(restaurantName),
-      child: Container(
+      onPressed: (){},
+      child: SizedBox(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

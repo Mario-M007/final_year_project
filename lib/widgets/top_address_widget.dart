@@ -7,7 +7,7 @@ class TopAddressWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {},
-      child: Container(
+      child: SizedBox(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -15,7 +15,7 @@ class TopAddressWidget extends StatelessWidget {
               "Beirut",
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            Icon(Icons.location_pin),
+            const Icon(Icons.location_pin),
           ],
         ),
       ),

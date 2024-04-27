@@ -9,8 +9,8 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  TextEditingController _controller = TextEditingController();
-  List<String> _data = [
+  final TextEditingController _controller = TextEditingController();
+  final List<String> _data = [
     'Apple',
     'Banana',
     'Orange',
@@ -19,7 +19,7 @@ class _SearchPageState extends State<SearchPage> {
     'Strawberry',
     'Watermelon',
   ];
-  List<String> _filteredData = [];
+  final List<String> _filteredData = [];
 
   @override
   void initState() {
@@ -52,15 +52,15 @@ class _SearchPageState extends State<SearchPage> {
                 controller: _controller,
                 decoration: InputDecoration(
                   hintText: 'Search for a restaurant...',
-                  hintStyle: TextStyle(
+                  hintStyle: const TextStyle(
                     color: Color(0xFFA3A4A4),
                   ),
-                  prefixIcon: Icon(
+                  prefixIcon: const Icon(
                     Icons.search,
                     color: Color(0xFFA3A4A4),
                   ),
                   // Set background color here
-                  fillColor: Color(0xFFFAFAFA),
+                  fillColor: const Color(0xFFFAFAFA),
                   filled: true,
                   // Remove border
                   border: OutlineInputBorder(
@@ -94,7 +94,7 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ),
       ),
-      bottomNavigationBar: CustomBottomAppBar(),
+      bottomNavigationBar: const CustomBottomAppBar(),
     );
   }
 }

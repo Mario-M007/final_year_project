@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CategoryWidget extends StatelessWidget {
   // final void Function()? onPressed;
@@ -7,11 +6,11 @@ class CategoryWidget extends StatelessWidget {
   final String categoryIcon;
 
   const CategoryWidget({
-    Key? key,
+    super.key,
     // this.onPressed,
     required this.category,
     required this.categoryIcon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class CategoryWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
           ),
         ),
-        minimumSize: MaterialStateProperty.all(Size(120.0, 60.0)),
+        minimumSize: MaterialStateProperty.all(const Size(120.0, 60.0)),
         side: MaterialStateProperty.all(
           const BorderSide(
             color: Color(0xFFDBDBDB),
@@ -33,12 +32,12 @@ class CategoryWidget extends StatelessWidget {
           ),
         ),
       ),
-      onPressed: () => print("$category"),
+      onPressed: () {},
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("${categoryIcon}"),
-          Text("${category}"),
+          Text(categoryIcon),
+          Text(category),
         ],
       ),
     );

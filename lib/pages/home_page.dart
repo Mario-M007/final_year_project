@@ -15,18 +15,18 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomBottomAppBar(),
+      bottomNavigationBar: const CustomBottomAppBar(),
       body: ListView(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 15),
+        padding: const EdgeInsetsDirectional.symmetric(horizontal: 15),
         children: [
-          SafeArea(
+          const SafeArea(
             child: Padding(
               padding: EdgeInsetsDirectional.only(top: 30),
               child: TopAddressWidget(),
             ),
           ),
           Padding(
-            padding: EdgeInsetsDirectional.only(top: 5, bottom: 18),
+            padding: const EdgeInsetsDirectional.only(top: 5, bottom: 18),
             child: Text(
               "Categories",
               style: Theme.of(context).textTheme.titleMedium,
@@ -51,22 +51,22 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Padding(
-            padding: EdgeInsetsDirectional.symmetric(vertical: 18),
+            padding: const EdgeInsetsDirectional.symmetric(vertical: 18),
             child: Text(
               "Restaurants nearby",
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          RestaurantCard(
+          const RestaurantCard(
               restaurantImgPath: "lib/assets/restaurant1.png",
               restaurantName: "Green Cafe"),
-          RestaurantCard(
+          const RestaurantCard(
               restaurantImgPath: "lib/assets/restaurant1.png",
               restaurantName: "Green Cafe"),
-          RestaurantCard(
+          const RestaurantCard(
               restaurantImgPath: "lib/assets/restaurant1.png",
               restaurantName: "Green Cafe"),
-          RestaurantCard(
+          const RestaurantCard(
               restaurantImgPath: "lib/assets/restaurant1.png",
               restaurantName: "Green Cafe"),
         ],

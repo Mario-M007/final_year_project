@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomBottomAppBar extends StatefulWidget {
-  const CustomBottomAppBar({Key? key});
+  const CustomBottomAppBar({super.key});
 
   @override
   State<StatefulWidget> createState() => _CustomBottomAppBarState();
@@ -36,7 +36,7 @@ class _CustomBottomAppBarState extends State<StatefulWidget> {
     return BottomAppBar(
       color: Colors.white,
       elevation: 0.95,
-      shape: CircularNotchedRectangle(),
+      shape: const CircularNotchedRectangle(),
       notchMargin: 5.0,
       clipBehavior: Clip.antiAlias,
       child: SizedBox(
@@ -73,12 +73,12 @@ class _CustomBottomAppBarState extends State<StatefulWidget> {
         children: [
           Icon(
             icon,
-            color: _selectedIndex == index ? Color(0xFFEA8D1F) : null,
+            color: _selectedIndex == index ? const Color(0xFFEA8D1F) : null,
           ),
           Text(
             label,
             style: TextStyle(
-              color: _selectedIndex == index ? Color(0xFFEA8D1F) : null,
+              color: _selectedIndex == index ? const Color(0xFFEA8D1F) : null,
             ),
           ),
         ],
