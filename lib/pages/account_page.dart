@@ -1,6 +1,4 @@
-import 'package:final_year_project/services/auth/auth_gate.dart';
 import 'package:final_year_project/services/auth/auth_service.dart';
-import 'package:final_year_project/widgets/bottom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class AccountPage extends StatelessWidget {
@@ -10,12 +8,6 @@ class AccountPage extends StatelessWidget {
     final _authService = AuthService();
     try {
       await _authService.signOut();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const AuthGate(),
-        ),
-      );
       print('signed out');
     } catch (error) {
       print(error.toString());
@@ -92,7 +84,7 @@ class AccountPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const CustomBottomAppBar(),
+      // bottomNavigationBar: const CustomBottomAppBar(),
     );
   }
 }

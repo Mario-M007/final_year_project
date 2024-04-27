@@ -1,9 +1,5 @@
 import 'package:final_year_project/services/auth/auth_gate.dart';
 import 'package:final_year_project/firebase_options.dart';
-import 'package:final_year_project/pages/account_page.dart';
-import 'package:final_year_project/pages/home_page.dart';
-import 'package:final_year_project/pages/orders_page.dart';
-import 'package:final_year_project/pages/search_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -27,13 +23,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const AuthGate(),
-      initialRoute: '/',
-      routes: {
-        '/home': (context) => const HomePage(),
-        '/search': (context) => const SearchPage(),
-        '/orders': (context) => const OrderPage(),
-        '/account': (context) => const AccountPage(),
-      },
       debugShowCheckedModeBanner: false,
     );
   }

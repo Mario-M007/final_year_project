@@ -1,4 +1,3 @@
-import 'package:final_year_project/widgets/bottom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class OrderPage extends StatefulWidget {
@@ -69,7 +68,7 @@ class _OrderPageState extends State<OrderPage> {
         tooltip: 'Add Item',
         child: const Icon(Icons.add),
       ),
-      bottomNavigationBar: const CustomBottomAppBar(),
+      // bottomNavigationBar: const CustomBottomAppBar(),
     );
   }
 

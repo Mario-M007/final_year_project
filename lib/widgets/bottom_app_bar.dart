@@ -1,3 +1,7 @@
+import 'package:final_year_project/pages/account_page.dart';
+import 'package:final_year_project/pages/home_page.dart';
+import 'package:final_year_project/pages/orders_page.dart';
+import 'package:final_year_project/pages/search_page.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomAppBar extends StatefulWidget {
@@ -8,78 +12,65 @@ class CustomBottomAppBar extends StatefulWidget {
 }
 
 class _CustomBottomAppBarState extends State<StatefulWidget> {
+  PageController _pageController = PageController(initialPage: 0);
   int _selectedIndex = 0;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Get the current route and set the selected index accordingly
-    String? currentRoute = ModalRoute.of(context)!.settings.name;
-    switch (currentRoute) {
-      case '/home':
-        _selectedIndex = 0;
-        break;
-      case '/search':
-        _selectedIndex = 1;
-        break;
-      case '/orders':
-        _selectedIndex = 2;
-        break;
-      case '/account':
-        _selectedIndex = 3;
-        break;
-    }
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.white,
-      elevation: 0.95,
-      shape: const CircularNotchedRectangle(),
-      notchMargin: 5.0,
-      clipBehavior: Clip.antiAlias,
-      child: SizedBox(
-        height: kBottomNavigationBarHeight,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildIconButton(0, Icons.home, 'Home', '/home'),
-            _buildIconButton(1, Icons.search, 'Search', '/search'),
-            _buildIconButton(2, Icons.shopping_basket, 'Orders', '/orders'),
-            _buildIconButton(
-                3, Icons.account_circle_outlined, 'Account', '/account'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildIconButton(
-      int index, IconData icon, String label, String route) {
-    return IconButton(
-      iconSize: 20,
-      onPressed: () {
-        if (_selectedIndex != index) {
+    return Scaffold(
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
           setState(() {
             _selectedIndex = index;
           });
-          Navigator.of(context).pushNamed(route);
-        }
-      },
-      icon: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: _selectedIndex == index ? const Color(0xFFEA8D1F) : null,
+        },
+        children: const [
+          HomePage(),
+          SearchPage(),
+          OrderPage(),
+          AccountPage(),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        unselectedItemColor: Colors.black,
+        selectedItemColor: const Color(0xFFEA8D1F),
+        showUnselectedLabels: true,
+        elevation: 0.95,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.ease,
+            );
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
-          Text(
-            label,
-            style: TextStyle(
-              color: _selectedIndex == index ? const Color(0xFFEA8D1F) : null,
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_basket),
+            label: 'Orders',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle_outlined),
+            label: 'Account',
           ),
         ],
       ),

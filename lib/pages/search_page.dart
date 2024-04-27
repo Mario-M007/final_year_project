@@ -1,4 +1,3 @@
-import 'package:final_year_project/widgets/bottom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
@@ -94,7 +93,6 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomAppBar(),
     );
   }
 }

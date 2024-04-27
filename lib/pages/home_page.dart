@@ -1,4 +1,3 @@
-import 'package:final_year_project/widgets/bottom_app_bar.dart';
 import 'package:final_year_project/widgets/category_widget.dart';
 import 'package:final_year_project/widgets/restaurant_card.dart';
 import 'package:final_year_project/widgets/top_address_widget.dart';
@@ -15,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const CustomBottomAppBar(),
+      // bottomNavigationBar: const CustomBottomAppBar(),
       body: ListView(
         padding: const EdgeInsetsDirectional.symmetric(horizontal: 15),
         children: [
