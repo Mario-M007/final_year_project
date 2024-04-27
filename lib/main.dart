@@ -18,8 +18,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
         colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.deepPurple, primary: Colors.black),
+            seedColor: Colors.deepPurple, primary: Colors.black,),
         useMaterial3: true,
       ),
       home: const AuthGate(),

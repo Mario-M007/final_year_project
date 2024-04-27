@@ -42,9 +42,11 @@ class _CustomBottomAppBarState extends State<StatefulWidget> {
         currentIndex: _selectedIndex,
         unselectedItemColor: Colors.black,
         selectedItemColor: const Color(0xFFEA8D1F),
+        unselectedFontSize: 14,
+        selectedFontSize: 14,
         showUnselectedLabels: true,
-        elevation: 0.95,
         type: BottomNavigationBarType.fixed,
+        landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
         onTap: (index) {
           setState(() {
             _selectedIndex = index;
