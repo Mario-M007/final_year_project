@@ -20,12 +20,20 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
+  bool _obscurePassword = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscurePassword = !_obscurePassword;
+    });
+  }
+
   void register() async {
     final _authService = AuthService();
     if (confirmPasswordController.text == passwordController.text) {
       try {
         await _authService.signUpWithEmailAndPassword(
-            emailController.text, passwordController.text,nameController.text);
+            emailController.text, passwordController.text, nameController.text);
       } catch (error) {
         showDialog(
           context: context,
@@ -111,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsetsDirectional.only(bottom: 10),
                 child: TextField(
                   controller: passwordController,
-                  obscureText: true,
+                  obscureText: _obscurePassword,
                   decoration: InputDecoration(
                     hintText: 'Password',
                     hintStyle: const TextStyle(
@@ -127,12 +135,20 @@ class _RegisterPageState extends State<RegisterPage> {
                       borderRadius: BorderRadius.circular(15),
                       borderSide: BorderSide.none,
                     ),
+                    suffixIcon: IconButton(
+                      onPressed: _togglePasswordVisibility,
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                    ),
                   ),
                 ),
               ),
               TextField(
                 controller: confirmPasswordController,
-                obscureText: true,
+                obscureText: _obscurePassword,
                 decoration: InputDecoration(
                   hintText: 'Confirm Password',
                   hintStyle: const TextStyle(

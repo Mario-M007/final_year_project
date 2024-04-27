@@ -19,6 +19,14 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController passwordController = TextEditingController();
 
+  bool _obscurePassword = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscurePassword = !_obscurePassword;
+    });
+  }
+
   void logIn() async {
     final _authService = AuthService();
     try {
@@ -83,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextField(
                 controller: passwordController,
-                obscureText: true,
+                obscureText: _obscurePassword,
                 decoration: InputDecoration(
                   hintText: 'Password',
                   hintStyle: const TextStyle(
@@ -98,6 +106,14 @@ class _LoginPageState extends State<LoginPage> {
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
                     borderSide: BorderSide.none,
+                  ),
+                  suffixIcon: IconButton(
+                    onPressed: _togglePasswordVisibility,
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                    ),
                   ),
                 ),
               ),
