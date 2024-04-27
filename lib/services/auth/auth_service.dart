@@ -23,14 +23,21 @@ class AuthService {
 
   // sign up
   Future<UserCredential> signUpWithEmailAndPassword(
-      String email, password) async {
+      String email, password, username) async {
     try {
       UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
+          await userCredential.user?.updateProfile(displayName: username);
       return userCredential;
     } on FirebaseAuthException catch (error) {
       throw Exception(error.code);
     }
+  }
+
+  // get user name
+  Future<String?> getUserDisplayName() async {
+    final user = _firebaseAuth.currentUser;
+    return user?.displayName; // Return display name or null if not set
   }
 
   // sign out

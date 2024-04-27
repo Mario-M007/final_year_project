@@ -25,7 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
     if (confirmPasswordController.text == passwordController.text) {
       try {
         await _authService.signUpWithEmailAndPassword(
-            emailController.text, passwordController.text);
+            emailController.text, passwordController.text,nameController.text);
       } catch (error) {
         showDialog(
           context: context,

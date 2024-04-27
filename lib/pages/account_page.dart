@@ -1,8 +1,29 @@
 import 'package:final_year_project/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
-class AccountPage extends StatelessWidget {
+class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
+
+  @override
+  State<AccountPage> createState() => _AccountPageState();
+}
+
+class _AccountPageState extends State<AccountPage> {
+  String _displayName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDisplayName();
+  }
+
+  Future<void> _loadDisplayName() async {
+    final authService = AuthService();
+    final displayName = await authService.getUserDisplayName();
+    setState(() {
+      _displayName = displayName!;
+    });
+  }
 
   void logOut(BuildContext context) async {
     final _authService = AuthService();
@@ -31,7 +52,7 @@ class AccountPage extends StatelessWidget {
                           MaterialStateProperty.all(Colors.transparent)),
                   onPressed: () {},
                   child: Text(
-                    "John Doe",
+                    _displayName,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
@@ -84,7 +105,6 @@ class AccountPage extends StatelessWidget {
           ),
         ),
       ),
-      // bottomNavigationBar: const CustomBottomAppBar(),
     );
   }
 }
