@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:final_year_project/widgets/addon_check_box.dart';
 
 class OrderSelectionPage extends StatefulWidget {
-  const OrderSelectionPage({Key? key}) : super(key: key);
+  const OrderSelectionPage({super.key});
 
   @override
   State<OrderSelectionPage> createState() => _OrderSelectionPageState();
@@ -56,12 +56,12 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
               Padding(
                 padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
                 child: Text("Mushroom Pizza",
-                    style: Theme.of(context).textTheme.headline6),
+                    style: Theme.of(context).textTheme.titleLarge),
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
                 child: Text("\$21.00",
-                    style: Theme.of(context).textTheme.headline6),
+                    style: Theme.of(context).textTheme.titleLarge),
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
@@ -69,12 +69,13 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
                   "Garlic, olive oil base, mozarella, cremini mushrooms, ricotta, thyme, white truffle oil. Add arugula for an extra charge",
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1!
+                      .titleMedium!
                       .copyWith(color: Color.fromARGB(255, 139, 139, 139)),
                 ),
               ),
               const Divider(
-                thickness: 5,
+                thickness: 10,
+                color: const Color(0xFFF6F6F6),
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.only(
@@ -85,7 +86,7 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
                     Padding(
                       padding: const EdgeInsetsDirectional.only(bottom: 15.0),
                       child: Text("Addons",
-                          style: Theme.of(context).textTheme.headline6),
+                          style: Theme.of(context).textTheme.titleLarge),
                     ),
                     AddonCheckBox(
                       value: false,
