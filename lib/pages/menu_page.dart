@@ -3,7 +3,11 @@ import 'package:final_year_project/services/database/food_service.dart';
 import 'package:flutter/material.dart';
 
 class MenuPage extends StatefulWidget {
-  const MenuPage({super.key});
+  final String restaurantId;
+  const MenuPage({
+    super.key,
+    required this.restaurantId,
+  });
 
   @override
   State<MenuPage> createState() => _MenuPageState();
@@ -17,8 +21,8 @@ class _MenuPageState extends State<MenuPage> {
   @override
   void initState() {
     super.initState();
-    // Fetch food data on widget initialization
-    foodService.getFoods().then((data) {
+    // Fetch food data based on IDs on widget initialization
+    foodService.getFoodsByRestaurantId(widget.restaurantId).then((data) {
       setState(() {
         foods = data; // Update state with retrieved food data
         isLoading = false; // data is loaded

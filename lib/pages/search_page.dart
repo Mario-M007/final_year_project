@@ -1,3 +1,6 @@
+import 'package:final_year_project/models/restaurant.dart';
+import 'package:final_year_project/pages/menu_page.dart';
+import 'package:final_year_project/services/database/restaurant_service.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
@@ -8,35 +11,38 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  final _restaurantService = RestaurantService();
   final TextEditingController _controller = TextEditingController();
-  final List<String> _data = [
-    'Apple',
-    'Banana',
-    'Orange',
-    'Grapes',
-    'Pineapple',
-    'Strawberry',
-    'Watermelon',
-  ];
-  final List<String> _filteredData = [];
+
+  List<Restaurant> _allRestaurants = []; // List to store all restaurants
+  List<Restaurant> _filteredRestaurants = []; // Filtered results
 
   @override
   void initState() {
     super.initState();
-    _filteredData.addAll(_data);
+    try {
+      _restaurantService.getRestaurants().then((data) {
+        setState(() {
+          _allRestaurants = data;
+          // Filter restaurants based on initial query (optional)
+          _filteredRestaurants = _allRestaurants
+              .where((restaurant) => restaurant.name
+                  .toLowerCase()
+                  .contains(_controller.text.toLowerCase()))
+              .toList();
+        });
+      });
+    } catch (error) {
+      print("Error fetching restaurants: $error");
+    }
   }
 
-  void _filterData(String query) {
-    List<String> filteredList = [];
-    filteredList.addAll(_data);
-    if (query.isNotEmpty) {
-      filteredList.retainWhere(
-          (item) => item.toLowerCase().contains(query.toLowerCase()));
-    }
-    setState(() {
-      _filteredData.clear();
-      _filteredData.addAll(filteredList);
-    });
+  void _filterRestaurants(String query) {
+    _filteredRestaurants = _allRestaurants
+        .where((restaurant) =>
+            restaurant.name.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    setState(() {});
   }
 
   @override
@@ -73,19 +79,34 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
                 onChanged: (value) {
-                  _filterData(value);
+                  _filterRestaurants(value);
                 },
               ),
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: _filteredData.length,
+                itemCount: _filteredRestaurants.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_filteredData[index]),
-                    onTap: () {
-                      // Do something when item is tapped
-                    },
+                  final restaurant = _filteredRestaurants[index];
+                  return Padding(
+                    padding: const EdgeInsetsDirectional.only(bottom: 21.0),
+                    child: ListTile(
+                      title: Text(restaurant.name),
+                      leading: restaurant.imagePath.isNotEmpty
+                          ? Image.network(restaurant
+                              .imagePath) // Assuming imagePath is a URL
+                          : null, // Handle restaurants without images
+                      onTap: () {
+                        // Handle restaurant selection (you can access menu here)
+                        print(restaurant.id); // Print menu for demonstration
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  MenuPage(restaurantId: restaurant.id)),
+                        );
+                      },
+                    ),
                   );
                 },
               ),

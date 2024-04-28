@@ -1,3 +1,5 @@
+import 'package:final_year_project/models/restaurant.dart';
+import 'package:final_year_project/services/database/restaurant_service.dart';
 import 'package:final_year_project/widgets/category_widget.dart';
 import 'package:final_year_project/widgets/restaurant_card.dart';
 import 'package:final_year_project/widgets/top_address_widget.dart';
@@ -11,6 +13,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _restaurantService = RestaurantService(); // Assuming you have a service
+  List<Restaurant> _restaurants = []; // List to store fetched restaurants
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchRestaurants();
+  }
+
+  void _fetchRestaurants() async {
+    try {
+      final restaurants = await _restaurantService.getRestaurants();
+      setState(() {
+        _restaurants = restaurants;
+      });
+    } catch (error) {
+      print("Error fetching restaurants: $error");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,18 +77,13 @@ class _HomePageState extends State<HomePage> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          const RestaurantCard(
-              restaurantImgPath: "lib/assets/restaurant1.png",
-              restaurantName: "Green Cafe"),
-          const RestaurantCard(
-              restaurantImgPath: "lib/assets/restaurant1.png",
-              restaurantName: "Green Cafe"),
-          const RestaurantCard(
-              restaurantImgPath: "lib/assets/restaurant1.png",
-              restaurantName: "Green Cafe"),
-          const RestaurantCard(
-              restaurantImgPath: "lib/assets/restaurant1.png",
-              restaurantName: "Green Cafe"),
+          for (final restaurant in _restaurants)
+            RestaurantCard(
+              restaurantImgPath:
+                  restaurant.imagePath, // Assuming imagePath in Restaurant
+              restaurantName: restaurant.name,
+              restaurantId: restaurant.id,
+            ),
         ],
       ),
     );
