@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 
 class MenuPage extends StatefulWidget {
   final String restaurantId;
+  final String restaurantName;
   const MenuPage({
     super.key,
     required this.restaurantId,
+    required this.restaurantName,
   });
 
   @override
@@ -35,7 +37,7 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("MENU"),
+        title: Text(widget.restaurantName),
       ),
       body: SafeArea(
         child: isLoading

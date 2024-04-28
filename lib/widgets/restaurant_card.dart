@@ -22,7 +22,10 @@ class RestaurantCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MenuPage(restaurantId: restaurantId)),
+              builder: (context) => MenuPage(
+                    restaurantId: restaurantId,
+                    restaurantName: restaurantName,
+                  )),
         );
       },
       child: SizedBox(

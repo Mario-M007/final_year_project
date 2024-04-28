@@ -105,8 +105,10 @@ class _SearchPageState extends State<SearchPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  MenuPage(restaurantId: restaurant.id)),
+                              builder: (context) => MenuPage(
+                                    restaurantId: restaurant.id,
+                                    restaurantName: restaurant.name,
+                                  )),
                         );
                       },
                     ),
