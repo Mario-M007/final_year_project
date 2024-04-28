@@ -8,8 +8,12 @@ class OrderSelectionPage extends StatefulWidget {
 }
 
 class _OrderSelectionPageState extends State<OrderSelectionPage> {
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(title: Text("HIIIII")),
+      body: Text("hu"),
+    );
   }
 }

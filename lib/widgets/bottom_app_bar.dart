@@ -12,7 +12,7 @@ class CustomBottomAppBar extends StatefulWidget {
 }
 
 class _CustomBottomAppBarState extends State<StatefulWidget> {
-  PageController _pageController = PageController(initialPage: 0);
+  final PageController _pageController = PageController(initialPage: 0);
   int _selectedIndex = 0;
 
   @override
@@ -26,6 +26,7 @@ class _CustomBottomAppBarState extends State<StatefulWidget> {
     return Scaffold(
       body: PageView(
         controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
         onPageChanged: (index) {
           setState(() {
             _selectedIndex = index;
@@ -39,6 +40,7 @@ class _CustomBottomAppBarState extends State<StatefulWidget> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white.withOpacity(0.95),
         currentIndex: _selectedIndex,
         unselectedItemColor: Colors.black,
         selectedItemColor: const Color(0xFFEA8D1F),
@@ -59,19 +61,31 @@ class _CustomBottomAppBarState extends State<StatefulWidget> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Padding(
+              padding: EdgeInsetsDirectional.only(top: 14.0),
+              child: Icon(Icons.home),
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Padding(
+              padding: EdgeInsetsDirectional.only(top: 14.0),
+              child: Icon(Icons.search),
+            ),
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_basket),
+            icon: Padding(
+              padding: EdgeInsetsDirectional.only(top: 14.0),
+              child: Icon(Icons.shopping_basket),
+            ),
             label: 'Orders',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_outlined),
+            icon: Padding(
+              padding: EdgeInsetsDirectional.only(top: 14.0),
+              child: Icon(Icons.account_circle_outlined),
+            ),
             label: 'Account',
           ),
         ],

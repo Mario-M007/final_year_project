@@ -1,24 +1,13 @@
 import 'package:final_year_project/models/food.dart';
 
 class Restaurant {
-  final List<Food> _menu = [];
+  final String name;
+  final String imagePath;
+  final List<Food> menu;
 
-  /* 
-
-  GETTERS
-
-  */
-  List<Food> get menu => _menu;
-
-  /* 
-
-  OPERATIONS
-
-  */
-
-  /* 
-
-  HELPERS
-
-  */
+  Restaurant({
+    required this.name,
+    required this.imagePath,
+    required this.menu,
+  });
 }

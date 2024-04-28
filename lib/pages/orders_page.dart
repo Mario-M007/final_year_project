@@ -68,7 +68,6 @@ class _OrderPageState extends State<OrderPage> {
         tooltip: 'Add Item',
         child: const Icon(Icons.add),
       ),
-      // bottomNavigationBar: const CustomBottomAppBar(),
     );
   }
 

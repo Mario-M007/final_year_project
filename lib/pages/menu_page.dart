@@ -10,47 +10,60 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
-  final FoodService _foodService = FoodService();
+  final foodService = FoodService(); // Create an instance of FoodService
+  List<Food> foods = []; // List to store retrieved food data
+  bool isLoading = true; // loading state
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch food data on widget initialization
+    foodService.getFoods().then((data) {
+      setState(() {
+        foods = data; // Update state with retrieved food data
+        isLoading = false; // data is loaded
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("MENU"),
+      ),
       body: SafeArea(
-        child: FutureBuilder<List<Food>>(
-          future: _foodService.getFoods().then((snapshots) => snapshots
-              .map((snapshot) => snapshot as Map<String, dynamic>)
-              .toList()
-              .map((data) => Food.fromMap(data))
-              .toList()),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              // Process snapshot.data to display food items
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
+        child: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                itemCount: foods.length,
                 itemBuilder: (context, index) {
-                  Food foodSnapshot = snapshot.data![index];
-                  // Get the data map from the DocumentSnapshot
-                  Map<String, dynamic> foodData =
-                      foodSnapshot as Map<String, dynamic>;
-        
-                  return ListTile(
-                    title: Row(
-                      children: [
-                        Text(foodData['name']),
-                        Text('Price: \$' + snapshot.data![index].price.toString()), 
-                      ],
-                    ),
-                    subtitle: Text(foodData['description']),
-                    // Display other food properties based on foodData
+                  final food = foods[index];
+                  // Customize the widget based on your Food model properties
+                  return Column(
+                    children: [
+                      Text(food.foodCategory.name),
+                      ListTile(
+                        onTap: () {},
+                        title: Text(food.name),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                "\$${food.price.toStringAsFixed(2)}"), // Format price with 2 decimal places
+                            Text(food.description),
+                          ],
+                        ),
+                        trailing: Image(
+                          image: NetworkImage(food.imagePath),
+                        ),
+                      ),
+                    ],
                   );
                 },
-              );
-            }
-          },
-        ),
+              ),
       ),
     );
   }

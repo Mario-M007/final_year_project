@@ -6,55 +6,34 @@ class FoodService {
 
   // Get all foods
   Future<List<Food>> getFoods() async {
-    final foodCollection = _firestore.collection('food');
-    final snapshot = await foodCollection.get();
-
-    return snapshot.docs.map((doc) => Food.fromMap(doc.data())).toList();
+    final snapshot = await _firestore.collection('food').get();
+    return snapshot.docs.map((doc) => _fromDocument(doc)).toList();
   }
 
   // Get food by category
   Future<List<Food>> getFoodsByCategory(FoodCategory category) async {
-    final foodCollection = _firestore.collection('food');
-    final snapshot = await foodCollection
+    final snapshot = await _firestore
+        .collection('food')
         .where('foodCategory', isEqualTo: category.name)
         .get();
-
-    return snapshot.docs.map((doc) => Food.fromMap(doc.data())).toList();
+    return snapshot.docs.map((doc) => _fromDocument(doc)).toList();
   }
 
-  // Get a specific food by ID
-  Future<Food?> getFood(String id) async {
-    final foodDoc = _firestore.collection('food').doc(id);
-    final snapshot = await foodDoc.get();
+  // Function to convert Firestore document to Food model
+  Food _fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map;
+    final List<Addon> addons = (data['availableAddons'] as List)
+        .map((addon) => Addon(
+            name: addon['name'], price: (addon['price'] as num).toDouble()))
+        .toList();
 
-    if (snapshot.exists) {
-      return Food.fromMap(
-          snapshot.data() as Map<String, dynamic>); // Cast to non-null
-    } else {
-      return null;
-    }
+    return Food(
+      name: data['name'],
+      description: data['description'],
+      imagePath: data['imagePath'],
+      price: data['price'],
+      foodCategory: FoodCategory.values.byName(data['foodCategory']),
+      availableAddons: addons,
+    );
   }
-}
-
-// Assuming your Food class has a fromMap constructor to handle data from Firestore
-extension FoodMapper on Food {
-  static Food fromMap(Map<String, dynamic> data) => Food(
-        name: data['name'] as String,
-        description: data['description'] as String,
-        imagePath: data['imagePath'] as String,
-        price: (data['price'] as double).toDouble(),
-        foodCategory:
-            FoodCategory.values.byName(data['foodCategory'] as String),
-        availableAddons: (data['availableAddons'] as List)
-            .map((addonData) => Addon.fromMap(addonData))
-            .toList(),
-      );
-}
-
-// Assuming your Addon class also has a fromMap constructor
-extension AddonMapper on Addon {
-  static Addon fromMap(Map<String, dynamic> data) => Addon(
-        name: data['name'] as String,
-        price: (data['price'] as double).toDouble(),
-      );
 }
