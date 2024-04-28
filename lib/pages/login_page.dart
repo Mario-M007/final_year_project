@@ -1,4 +1,3 @@
-import 'package:final_year_project/pages/home_page.dart';
 import 'package:final_year_project/services/auth/auth_service.dart';
 import 'package:final_year_project/widgets/main_button.dart';
 import 'package:flutter/material.dart';
@@ -32,15 +31,6 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await authService.signInWithEmailAndPassword(
           emailController.text, passwordController.text);
-      // Check if the widget is mounted before navigating
-      if (mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ),
-        );
-      }
     } catch (error) {
       // Check if the widget is mounted before showing the dialog
       if (mounted) {
