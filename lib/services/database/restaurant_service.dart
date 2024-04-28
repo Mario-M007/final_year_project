@@ -13,6 +13,13 @@ class RestaurantService {
     final data = doc.data()! as Map;
     final String name = data['name'] as String;
     final String imagePath = data['imagePath'] as String;
-    return Restaurant(id: doc.id, name: name, imagePath: imagePath);
+
+    return Restaurant(
+      id: doc.id,
+      name: name,
+      imagePath: imagePath,
+      restaurantCategory: RestaurantCategory.values
+          .byName(data['restaurantCategory'].toString()),
+    );
   }
 }

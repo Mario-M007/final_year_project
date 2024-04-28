@@ -21,7 +21,7 @@ class Food {
 }
 
 enum FoodCategory {
-  main,
+  mains,
   salads,
   sides,
   desserts,

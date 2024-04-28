@@ -21,17 +21,28 @@ class RestaurantCard extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MenuPage(restaurantId:restaurantId)),
+          MaterialPageRoute(
+              builder: (context) => MenuPage(restaurantId: restaurantId)),
         );
       },
       child: SizedBox(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image(
-              image: NetworkImage(restaurantImgPath),
-              width: 350,
-              height: 300,
+            Container(
+              width: 366,
+              height: 311,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(color: const Color(0xFFDBDBDB)),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image(
+                  image: NetworkImage(restaurantImgPath),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             Text(restaurantName),
           ],

@@ -1,6 +1,6 @@
 import 'package:final_year_project/models/restaurant.dart';
 import 'package:final_year_project/services/database/restaurant_service.dart';
-import 'package:final_year_project/widgets/category_widget.dart';
+import 'package:final_year_project/widgets/restaurant_category_widget.dart';
 import 'package:final_year_project/widgets/restaurant_card.dart';
 import 'package:final_year_project/widgets/top_address_widget.dart';
 import 'package:flutter/material.dart';
@@ -56,17 +56,20 @@ class _HomePageState extends State<HomePage> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                CategoryWidget(category: "American", categoryIcon: "🍔"),
+                RestaurantCategoryWidget(
+                    category: RestaurantCategory.american, categoryIcon: "🍔"),
                 Padding(
                   padding: EdgeInsetsDirectional.symmetric(horizontal: 15),
-                  child:
-                      CategoryWidget(category: "Italian", categoryIcon: "🍝"),
+                  child: RestaurantCategoryWidget(
+                      category: RestaurantCategory.indian, categoryIcon: "🍝"),
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.only(end: 15),
-                  child: CategoryWidget(category: "Indian", categoryIcon: "🥘"),
+                  child: RestaurantCategoryWidget(
+                      category: RestaurantCategory.italian, categoryIcon: "🥘"),
                 ),
-                CategoryWidget(category: "Lebanese", categoryIcon: "🧆"),
+                RestaurantCategoryWidget(
+                    category: RestaurantCategory.lebanese, categoryIcon: "🧆"),
               ],
             ),
           ),

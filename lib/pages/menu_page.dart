@@ -17,6 +17,7 @@ class _MenuPageState extends State<MenuPage> {
   final foodService = FoodService(); // Create an instance of FoodService
   List<Food> foods = []; // List to store retrieved food data
   bool isLoading = true; // loading state
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
   @override
   void initState() {
@@ -42,28 +43,60 @@ class _MenuPageState extends State<MenuPage> {
                 child: CircularProgressIndicator(),
               )
             : ListView.builder(
-                itemCount: foods.length,
-                itemBuilder: (context, index) {
-                  final food = foods[index];
-                  // Customize the widget based on your Food model properties
+                itemCount: FoodCategory.values.length,
+                itemBuilder: (context, categoryIndex) {
+                  final category = FoodCategory.values[categoryIndex];
+                  final categoryName = capitalize(FoodCategory
+                      .values[categoryIndex]
+                      .toString()
+                      .split('.')
+                      .last); // Get enum value from index and convert to string
+                  final categoryFoods = foods
+                      .where((food) => food.foodCategory == category)
+                      .toList();
+                  if (categoryFoods.isEmpty) {
+                    return const SizedBox
+                        .shrink(); // Skip rendering if no foods in this category
+                  }
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(food.foodCategory.name),
-                      ListTile(
-                        onTap: () {},
-                        title: Text(food.name),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                "\$${food.price.toStringAsFixed(2)}"), // Format price with 2 decimal places
-                            Text(food.description),
-                          ],
-                        ),
-                        trailing: Image(
-                          image: NetworkImage(food.imagePath),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 16.0),
+                        child: Text(
+                          categoryName, // Display category name
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: categoryFoods.length,
+                        itemBuilder: (context, index) {
+                          final food = categoryFoods[index];
+                          return ListTile(
+                            onTap: () {},
+                            title: Text(food.name),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("\$${food.price.toStringAsFixed(2)}"),
+                                Text(food.description),
+                              ],
+                            ),
+                            trailing: food.imagePath == 'null'
+                                ? const SizedBox.shrink()
+                                : Image(
+                                    image: NetworkImage(food.imagePath),
+                                  ),
+                          );
+                        },
+                      ),
+                      const Divider(), // Add a divider between categories
                     ],
                   );
                 },

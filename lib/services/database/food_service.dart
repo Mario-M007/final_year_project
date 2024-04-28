@@ -34,13 +34,13 @@ class FoodService {
         .toList();
 
     return Food(
-      id: doc.id,
-      restaurantId: data['restaurantId'],
-      name: data['name'],
-      description: data['description'],
-      imagePath: data['imagePath'],
+      id: doc.id.toString(),
+      restaurantId: data['restaurantId'].toString(),
+      name: data['name'].toString(),
+      description: data['description'].toString(),
+      imagePath: data['imagePath'].toString(),
       price: double.parse(data['price'].toString()),
-      foodCategory: FoodCategory.values.byName(data['foodCategory']),
+      foodCategory: FoodCategory.values.byName(data['foodCategory'].toString()),
       availableAddons: addons,
     );
   }

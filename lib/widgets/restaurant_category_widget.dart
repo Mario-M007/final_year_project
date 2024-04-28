@@ -1,11 +1,12 @@
+import 'package:final_year_project/models/restaurant.dart';
 import 'package:flutter/material.dart';
 
-class CategoryWidget extends StatelessWidget {
+class RestaurantCategoryWidget extends StatelessWidget {
   // final void Function()? onPressed;
-  final String category;
+  final RestaurantCategory category;
   final String categoryIcon;
 
-  const CategoryWidget({
+  const RestaurantCategoryWidget({
     super.key,
     // this.onPressed,
     required this.category,
@@ -37,7 +38,7 @@ class CategoryWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(categoryIcon),
-          Text(category),
+          Text(category.toString().split('.').last),
         ],
       ),
     );
