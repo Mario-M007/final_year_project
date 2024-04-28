@@ -14,7 +14,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // bottomNavigationBar: const CustomBottomAppBar(),
       body: ListView(
         padding: const EdgeInsetsDirectional.symmetric(horizontal: 15),
         children: [

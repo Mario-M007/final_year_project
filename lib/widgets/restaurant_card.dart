@@ -1,3 +1,4 @@
+import 'package:final_year_project/pages/menu_page.dart';
 import 'package:flutter/material.dart';
 
 class RestaurantCard extends StatelessWidget {
@@ -13,8 +14,14 @@ class RestaurantCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.transparent)),
-      onPressed: (){},
+      style: ButtonStyle(
+          overlayColor: MaterialStateProperty.all(Colors.transparent)),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MenuPage()),
+        );
+      },
       child: SizedBox(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
