@@ -6,7 +6,7 @@ class Food {
   final String imagePath;
   final double price;
   final FoodCategory foodCategory;
-  List<Addon>? availableAddons;
+  List<Addon> availableAddons;
 
   Food({
     required this.id,
@@ -16,7 +16,7 @@ class Food {
     required this.imagePath,
     required this.price,
     required this.foodCategory,
-    this.availableAddons,
+    required this.availableAddons,
   });
 }
 

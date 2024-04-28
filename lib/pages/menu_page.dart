@@ -1,4 +1,5 @@
 import 'package:final_year_project/models/food.dart';
+import 'package:final_year_project/pages/order_selection_page.dart';
 import 'package:final_year_project/services/database/food_service.dart';
 import 'package:flutter/material.dart';
 
@@ -81,7 +82,14 @@ class _MenuPageState extends State<MenuPage> {
                         itemBuilder: (context, index) {
                           final food = categoryFoods[index];
                           return ListTile(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OrderSelectionPage(),
+                                ),
+                              );
+                            },
                             title: Text(food.name),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

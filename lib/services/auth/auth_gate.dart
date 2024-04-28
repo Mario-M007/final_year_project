@@ -1,5 +1,5 @@
 import 'package:final_year_project/services/auth/login_or_register.dart';
-import 'package:final_year_project/widgets/bottom_app_bar.dart';
+import 'package:final_year_project/pages/main_app_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +14,7 @@ class AuthGate extends StatelessWidget {
         builder: (context, snapshot) {
           //user is logged in
           if (snapshot.hasData) {
-            return const CustomBottomAppBar();
+            return const MainAppView();
           }
 
           //user is logged out

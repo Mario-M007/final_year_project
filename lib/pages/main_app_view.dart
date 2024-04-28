@@ -4,14 +4,14 @@ import 'package:final_year_project/pages/orders_page.dart';
 import 'package:final_year_project/pages/search_page.dart';
 import 'package:flutter/material.dart';
 
-class CustomBottomAppBar extends StatefulWidget {
-  const CustomBottomAppBar({super.key});
+class MainAppView extends StatefulWidget {
+  const MainAppView({super.key});
 
   @override
-  State<StatefulWidget> createState() => _CustomBottomAppBarState();
+  State<StatefulWidget> createState() => _MainAppViewState();
 }
 
-class _CustomBottomAppBarState extends State<StatefulWidget> {
+class _MainAppViewState extends State<StatefulWidget> {
   final PageController _pageController = PageController(initialPage: 0);
   int _selectedIndex = 0;
 
