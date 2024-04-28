@@ -35,20 +35,26 @@ class _RegisterPageState extends State<RegisterPage> {
         await _authService.signUpWithEmailAndPassword(
             emailController.text, passwordController.text, nameController.text);
       } catch (error) {
+        // Check if the widget is mounted before showing the dialog
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(error.toString()),
+            ),
+          );
+        }
+      }
+    } else {
+      // Check if the widget is mounted before showing the dialog
+      if (mounted) {
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: Text(error.toString()),
+          builder: (context) => const AlertDialog(
+            title: Text("Passwords don't match"),
           ),
         );
       }
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => const AlertDialog(
-          title: Text("Passwords don't match"),
-        ),
-      );
     }
   }
 

@@ -22,15 +22,18 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
     try {
       _restaurantService.getRestaurants().then((data) {
-        setState(() {
-          _allRestaurants = data;
-          // Filter restaurants based on initial query (optional)
-          _filteredRestaurants = _allRestaurants
-              .where((restaurant) => restaurant.name
-                  .toLowerCase()
-                  .contains(_controller.text.toLowerCase()))
-              .toList();
-        });
+        if (mounted) {
+          // Check if the widget is still mounted
+          setState(() {
+            _allRestaurants = data;
+            // Filter restaurants based on initial query (optional)
+            _filteredRestaurants = _allRestaurants
+                .where((restaurant) => restaurant.name
+                    .toLowerCase()
+                    .contains(_controller.text.toLowerCase()))
+                .toList();
+          });
+        }
       });
     } catch (error) {
       print("Error fetching restaurants: $error");

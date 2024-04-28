@@ -32,19 +32,25 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await _authService.signInWithEmailAndPassword(
           emailController.text, passwordController.text);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ),
-      );
+      // Check if the widget is mounted before navigating
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ),
+        );
+      }
     } catch (error) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(error.toString()),
-        ),
-      );
+      // Check if the widget is mounted before showing the dialog
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(error.toString()),
+          ),
+        );
+      }
     }
   }
 
