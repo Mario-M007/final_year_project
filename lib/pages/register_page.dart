@@ -30,7 +30,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void register() async {
     final authService = AuthService();
-    if (confirmPasswordController.text == passwordController.text) {
+    if (confirmPasswordController.text == passwordController.text &&
+        nameController.text.isNotEmpty) {
       try {
         await authService.signUpWithEmailAndPassword(
             emailController.text, passwordController.text, nameController.text);
@@ -50,8 +51,10 @@ class _RegisterPageState extends State<RegisterPage> {
       if (mounted) {
         showDialog(
           context: context,
-          builder: (context) => const AlertDialog(
-            title: Text("Passwords don't match"),
+          builder: (context) => AlertDialog(
+            title: Text(nameController.text.isEmpty
+                ? "Please enter a name"
+                : "Passwords don't match"),
           ),
         );
       }

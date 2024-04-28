@@ -22,9 +22,11 @@ class _AccountPageState extends State<AccountPage> {
   Future<void> _loadDisplayName() async {
     final authService = AuthService();
     final displayName = await authService.getUserDisplayName();
-    setState(() {
-      _displayName = displayName!;
-    });
+    if (displayName != null) {
+      setState(() {
+        _displayName = displayName;
+      });
+    }
   }
 
   void logOut(BuildContext context) async {
