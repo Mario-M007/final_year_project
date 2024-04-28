@@ -41,8 +41,8 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
         children: [
           ListView(
             children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.only(bottom: 15),
+              const Padding(
+                padding: EdgeInsetsDirectional.only(bottom: 15),
                 child: SizedBox(
                   width: 300,
                   height: 150,
@@ -67,15 +67,13 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
                 padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
                 child: Text(
                   "Garlic, olive oil base, mozarella, cremini mushrooms, ricotta, thyme, white truffle oil. Add arugula for an extra charge",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .copyWith(color: Color.fromARGB(255, 139, 139, 139)),
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: const Color.fromARGB(255, 139, 139, 139)),
                 ),
               ),
               const Divider(
                 thickness: 10,
-                color: const Color(0xFFF6F6F6),
+                color: Color(0xFFF6F6F6),
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.only(
@@ -121,7 +119,7 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.remove),
+                    icon: const Icon(Icons.remove),
                     onPressed: decrementQuantity,
                   ),
                   SizedBox(
@@ -129,11 +127,11 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
                     child: Text(
                       '$quantity',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.add),
+                    icon: const Icon(Icons.add),
                     onPressed: incrementQuantity,
                   ),
                 ],

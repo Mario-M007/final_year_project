@@ -54,7 +54,7 @@ class _AddonCheckBoxState extends State<AddonCheckBox> {
                 color: _value ? Colors.black : Colors.transparent,
               ),
               child: _value
-                  ? Icon(
+                  ? const Icon(
                       Icons.check,
                       color: Colors.white,
                       size: 18.0,

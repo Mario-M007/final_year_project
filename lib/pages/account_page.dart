@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:final_year_project/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
@@ -26,12 +28,11 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   void logOut(BuildContext context) async {
-    final _authService = AuthService();
+    final authService = AuthService();
     try {
-      await _authService.signOut();
-      print('signed out');
+      await authService.signOut();
     } catch (error) {
-      print(error.toString());
+      log(error.toString());
     }
   }
 

@@ -29,10 +29,10 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void register() async {
-    final _authService = AuthService();
+    final authService = AuthService();
     if (confirmPasswordController.text == passwordController.text) {
       try {
-        await _authService.signUpWithEmailAndPassword(
+        await authService.signUpWithEmailAndPassword(
             emailController.text, passwordController.text, nameController.text);
       } catch (error) {
         // Check if the widget is mounted before showing the dialog

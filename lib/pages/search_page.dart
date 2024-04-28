@@ -2,6 +2,7 @@ import 'package:final_year_project/models/restaurant.dart';
 import 'package:final_year_project/pages/menu_page.dart';
 import 'package:final_year_project/services/database/restaurant_service.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -36,7 +37,7 @@ class _SearchPageState extends State<SearchPage> {
         }
       });
     } catch (error) {
-      print("Error fetching restaurants: $error");
+      log("Error fetching restaurants: $error");
     }
   }
 
@@ -101,7 +102,7 @@ class _SearchPageState extends State<SearchPage> {
                           : null, // Handle restaurants without images
                       onTap: () {
                         // Handle restaurant selection (you can access menu here)
-                        print(restaurant.id); // Print menu for demonstration
+                        log(restaurant.id); // Print menu for demonstration
                         Navigator.push(
                           context,
                           MaterialPageRoute(

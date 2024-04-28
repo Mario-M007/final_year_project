@@ -3,8 +3,8 @@ import 'package:final_year_project/services/database/restaurant_service.dart';
 import 'package:final_year_project/widgets/restaurant_category_widget.dart';
 import 'package:final_year_project/widgets/restaurant_card.dart';
 import 'package:final_year_project/widgets/top_address_widget.dart';
+import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
         _restaurants = restaurants;
       });
     } catch (error) {
-      print("Error fetching restaurants: $error");
+      log("Error fetching restaurants: $error");
     }
   }
 

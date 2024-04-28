@@ -28,9 +28,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void logIn() async {
-    final _authService = AuthService();
+    final authService = AuthService();
     try {
-      await _authService.signInWithEmailAndPassword(
+      await authService.signInWithEmailAndPassword(
           emailController.text, passwordController.text);
       // Check if the widget is mounted before navigating
       if (mounted) {
