@@ -2,15 +2,17 @@ import 'package:final_year_project/models/restaurant.dart';
 import 'package:flutter/material.dart';
 
 class RestaurantCategoryWidget extends StatelessWidget {
-  // final void Function()? onPressed;
+  final void Function() onPressed;
   final RestaurantCategory category;
   final String categoryIcon;
+  final Color backgroundColor;
 
   const RestaurantCategoryWidget({
     super.key,
-    // this.onPressed,
+    required this.onPressed,
     required this.category,
     required this.categoryIcon,
+    required this.backgroundColor,
   });
 
   @override
@@ -18,7 +20,7 @@ class RestaurantCategoryWidget extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(
-          Colors.white,
+          backgroundColor,
         ),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
@@ -33,7 +35,7 @@ class RestaurantCategoryWidget extends StatelessWidget {
           ),
         ),
       ),
-      onPressed: () {},
+      onPressed: onPressed,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

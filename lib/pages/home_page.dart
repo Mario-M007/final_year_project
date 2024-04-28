@@ -4,6 +4,7 @@ import 'package:final_year_project/widgets/restaurant_category_widget.dart';
 import 'package:final_year_project/widgets/restaurant_card.dart';
 import 'package:final_year_project/widgets/top_address_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,6 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _restaurantService = RestaurantService(); // Assuming you have a service
   List<Restaurant> _restaurants = []; // List to store fetched restaurants
+  RestaurantCategory? _selectedCategory; // Track selected category
 
   @override
   void initState() {
@@ -33,8 +35,34 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  List<Restaurant> _filteredRestaurants() {
+    if (_selectedCategory == null) {
+      return _restaurants; // Show all restaurants if no category selected
+    }
+    return _restaurants
+        .where(
+            (restaurant) => restaurant.restaurantCategory == _selectedCategory)
+        .toList();
+  }
+
+  String categoryIconFor(RestaurantCategory category) {
+    switch (category) {
+      case RestaurantCategory.american:
+        return "🍔";
+      case RestaurantCategory.italian:
+        return "🍝";
+      case RestaurantCategory.indian:
+        return "🥘";
+      case RestaurantCategory.lebanese:
+        return "🧆";
+      default:
+        return "🍕"; // Or a default icon
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final filteredRestaurants = _filteredRestaurants();
     return Scaffold(
       body: ListView(
         padding: const EdgeInsetsDirectional.symmetric(horizontal: 15),
@@ -52,25 +80,31 @@ class _HomePageState extends State<HomePage> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          const SingleChildScrollView(
+          SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: [
-                RestaurantCategoryWidget(
-                    category: RestaurantCategory.american, categoryIcon: "🍔"),
-                Padding(
-                  padding: EdgeInsetsDirectional.symmetric(horizontal: 15),
-                  child: RestaurantCategoryWidget(
-                      category: RestaurantCategory.indian, categoryIcon: "🍝"),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.only(end: 15),
-                  child: RestaurantCategoryWidget(
-                      category: RestaurantCategory.italian, categoryIcon: "🥘"),
-                ),
-                RestaurantCategoryWidget(
-                    category: RestaurantCategory.lebanese, categoryIcon: "🧆"),
-              ],
+              children: RestaurantCategory.values
+                  .map((category) => Builder(
+                        builder: (context) {
+                          final isSelected = category == _selectedCategory;
+                          return Padding(
+                            padding:
+                                const EdgeInsetsDirectional.only(end: 10.0),
+                            child: RestaurantCategoryWidget(
+                              category: category,
+                              categoryIcon: categoryIconFor(category),
+                              onPressed: () => setState(() {
+                                _selectedCategory =
+                                    isSelected ? null : category;
+                              }),
+                              backgroundColor: isSelected
+                                  ? const Color(0xFFEA8D1F)
+                                  : Colors.white,
+                            ),
+                          );
+                        },
+                      ))
+                  .toList(),
             ),
           ),
           Padding(
@@ -80,7 +114,7 @@ class _HomePageState extends State<HomePage> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          for (final restaurant in _restaurants)
+          for (final restaurant in filteredRestaurants)
             RestaurantCard(
               restaurantImgPath:
                   restaurant.imagePath, // Assuming imagePath in Restaurant
