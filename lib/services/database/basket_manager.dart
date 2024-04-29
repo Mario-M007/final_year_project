@@ -25,12 +25,13 @@ class BasketManager {
     }
   }
 
-  static bool _compareAddonLists(List<Addon> list1, List<Addon> list2) {
+  static bool _compareAddonLists(List<Addon>? list1, List<Addon>? list2) {
     // Compare two lists of addons
-    if (list1.length != list2.length) return false;
+    if (list1?.length != list2?.length) return false;
 
-    for (int i = 0; i < list1.length; i++) {
-      if (list1[i].name != list2[i].name || list1[i].price != list2[i].price) {
+    for (int i = 0; i < list1!.length; i++) {
+      if (list1[i].name != list2?[i].name ||
+          list1[i].price != list2?[i].price) {
         return false;
       }
     }

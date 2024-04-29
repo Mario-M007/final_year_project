@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:final_year_project/widgets/history_button.dart';
 
 class BasketPage extends StatefulWidget {
-  const BasketPage({Key? key}) : super(key: key);
+  const BasketPage({super.key});
 
   @override
   State<BasketPage> createState() => _BasketPageState();
@@ -87,18 +87,37 @@ class _BasketPageState extends State<BasketPage> {
               itemCount: basketItems.length,
               itemBuilder: (context, index) {
                 final item = basketItems[index];
+                // Calculate total price for the item
+                var totalPrice = item.food.price * item.quantity;
+
+                // Add price of selected addons
+                if (item.selectedAddons != null) {
+                  for (var addon in item.selectedAddons!) {
+                    totalPrice += addon.price;
+                  }
+                }
+
+                // Add price of selected option, if any
+                if (item.selectedRequiredOption != null) {
+                  totalPrice += item.selectedRequiredOption!.price;
+                }
+
+                // Generate the subtitle text to display quantity, total price, selected options, and selected addons
+                final subtitleText =
+                    'Quantity: ${item.quantity}\nTotal Price: \$${totalPrice.toStringAsFixed(2)}${item.selectedRequiredOption == null ? '' : '\nSelected Option: ${item.selectedRequiredOption!.name}'}${item.selectedAddons!.isEmpty ? '' : '\nSelected Addons: ${item.selectedAddons?.map((addon) => addon.name).join(', ')}'}';
+
                 return ListTile(
                   title: Text(item.food.name),
-                  subtitle: Text('Quantity: ${item.quantity}'),
+                  subtitle: Text(subtitleText),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.remove),
+                        icon: const Icon(Icons.remove),
                         onPressed: () => _decreaseQuantity(item),
                       ),
                       IconButton(
-                        icon: Icon(Icons.add),
+                        icon: const Icon(Icons.add),
                         onPressed: () => _increaseQuantity(item),
                       ),
                     ],

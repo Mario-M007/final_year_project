@@ -4,15 +4,15 @@ class BasketItem {
   String id;
   Food food;
   int quantity;
-  List<Addon> selectedAddons;
-  RequiredOption selectedRequiredOption;
+  List<Addon>? selectedAddons;
+  RequiredOption? selectedRequiredOption;
 
   BasketItem({
     required this.id,
     required this.food,
     required this.quantity,
-    required this.selectedAddons,
-    required this.selectedRequiredOption,
+    this.selectedAddons,
+    this.selectedRequiredOption,
   });
 
   @override

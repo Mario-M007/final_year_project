@@ -18,7 +18,7 @@ class MenuItemSelectionPage extends StatefulWidget {
   final List<RequiredOption> menuItemRequiredOptions;
 
   const MenuItemSelectionPage({
-    Key? key,
+    super.key,
     required this.menuItemId,
     required this.menuItemRestaurantId,
     required this.menuItemName,
@@ -28,7 +28,7 @@ class MenuItemSelectionPage extends StatefulWidget {
     required this.menuItemFoodCategory,
     required this.menuItemAddons,
     required this.menuItemRequiredOptions,
-  }) : super(key: key);
+  });
 
   @override
   State<MenuItemSelectionPage> createState() => _MenuItemSelectionPageState();
@@ -259,7 +259,7 @@ class _MenuItemSelectionPageState extends State<MenuItemSelectionPage> {
                     // Check if quantity is greater than 0
                     if (quantity <= 0) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text('Quantity must be greater than 0.'),
                         ),
                       );
@@ -271,7 +271,7 @@ class _MenuItemSelectionPageState extends State<MenuItemSelectionPage> {
                         selectedRequiredOptionRadio == null) {
                       // Show a dialog or snackbar indicating that a required option must be selected
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text('Please select a required option.'),
                         ),
                       );
@@ -301,12 +301,11 @@ class _MenuItemSelectionPageState extends State<MenuItemSelectionPage> {
                           selectedRequiredOptionRadio != null
                               ? widget.menuItemRequiredOptions[
                                   selectedRequiredOptionRadio!]
-                              : RequiredOption(name: 'none', price: 0),
+                              : null,
                     );
 
                     // Add or update the item in the basket
-                    final updatedItem =
-                        BasketManager.addToBasket(newBasketItem);
+                    BasketManager.addToBasket(newBasketItem);
 
                     print(BasketManager.basketItems);
 
