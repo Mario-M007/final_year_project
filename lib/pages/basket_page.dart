@@ -1,10 +1,14 @@
+import 'package:final_year_project/pages/order_history_page.dart';
+import 'package:final_year_project/services/database/order_service.dart';
+import 'package:final_year_project/widgets/history_button.dart';
+import 'package:final_year_project/widgets/main_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:final_year_project/models/order.dart';
 import 'package:final_year_project/services/database/basket_manager.dart';
-import 'package:flutter/material.dart';
-import 'package:final_year_project/widgets/history_button.dart';
 
 class BasketPage extends StatefulWidget {
-  const BasketPage({super.key});
+  const BasketPage({Key? key}) : super(key: key);
 
   @override
   State<BasketPage> createState() => _BasketPageState();
@@ -47,9 +51,71 @@ class _BasketPageState extends State<BasketPage> {
     });
   }
 
+  Future<void> _confirmOrder() async {
+    try {
+      // Get the current user ID from Firebase Authentication
+      String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+      // Get the restaurant ID from the first item in the basket
+      String restaurantId = '';
+      if (basketItems.isNotEmpty) {
+        restaurantId = basketItems.first.food.restaurantId;
+      }
+
+
+      // Create a Basket object from the list of basket items
+      Basket basket = Basket.fromItems(basketItems);
+
+      // Create an Order object from the basket items
+      final order = Orders(
+        userId: userId,
+        restaurantId: restaurantId,
+        totalPrice: _calculateTotalPrice(),
+        orderTime: DateTime.now(),
+        orderStatus: OrderStatus.confirmed,
+        basket: basket, // Pass the Basket object
+      );
+
+      // Save the order to Firestore
+      final orderService = OrderService();
+      await orderService.saveOrder(order);
+
+      // Clear the basket after saving the order
+      BasketManager.clearBasket();
+      _updateBasketItems();
+
+      // Show a message or navigate to a confirmation screen
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Order confirmed')),
+      );
+    } catch (e) {
+      print('Error confirming order: $e');
+      // Handle errors accordingly
+    }
+  }
+
+  double _calculateTotalPrice() {
+    double totalPrice = 0;
+    for (final item in basketItems) {
+      totalPrice += item.food.price * item.quantity;
+      if (item.selectedAddons != null) {
+        for (final addon in item.selectedAddons!) {
+          totalPrice += addon.price;
+        }
+      }
+      if (item.selectedRequiredOption != null) {
+        totalPrice += item.selectedRequiredOption!.price;
+      }
+    }
+    return totalPrice;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Basket'),
+      ),
       body: basketItems.isEmpty
           ? SafeArea(
               child: Column(
@@ -58,7 +124,17 @@ class _BasketPageState extends State<BasketPage> {
                   Padding(
                     padding: const EdgeInsetsDirectional.symmetric(
                         horizontal: 25, vertical: 25),
-                    child: HistoryButton(onTap: () {}, text: "History"),
+                    child: HistoryButton(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const OrderHistoryPage(), // Your order history page
+                            ),
+                          );
+                        },
+                        text: "History"),
                   ),
                   Padding(
                     padding: const EdgeInsetsDirectional.only(top: 70),
@@ -87,28 +163,11 @@ class _BasketPageState extends State<BasketPage> {
               itemCount: basketItems.length,
               itemBuilder: (context, index) {
                 final item = basketItems[index];
-                // Calculate total price for the item
-                var totalPrice = item.food.price * item.quantity;
-
-                // Add price of selected addons
-                if (item.selectedAddons != null) {
-                  for (var addon in item.selectedAddons!) {
-                    totalPrice += addon.price;
-                  }
-                }
-
-                // Add price of selected option, if any
-                if (item.selectedRequiredOption != null) {
-                  totalPrice += item.selectedRequiredOption!.price;
-                }
-
-                // Generate the subtitle text to display quantity, total price, selected options, and selected addons
-                final subtitleText =
-                    'Quantity: ${item.quantity}\nTotal Price: \$${totalPrice.toStringAsFixed(2)}${item.selectedRequiredOption == null ? '' : '\nSelected Option: ${item.selectedRequiredOption!.name}'}${item.selectedAddons!.isEmpty ? '' : '\nSelected Addons: ${item.selectedAddons?.map((addon) => addon.name).join(', ')}'}';
-
+                final totalPrice = _calculateTotalPriceForItem(item);
                 return ListTile(
                   title: Text(item.food.name),
-                  subtitle: Text(subtitleText),
+                  subtitle:
+                      Text('Total Price: \$${totalPrice.toStringAsFixed(2)}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -116,6 +175,7 @@ class _BasketPageState extends State<BasketPage> {
                         icon: const Icon(Icons.remove),
                         onPressed: () => _decreaseQuantity(item),
                       ),
+                      Text('${item.quantity}'),
                       IconButton(
                         icon: const Icon(Icons.add),
                         onPressed: () => _increaseQuantity(item),
@@ -125,6 +185,32 @@ class _BasketPageState extends State<BasketPage> {
                 );
               },
             ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: basketItems.isEmpty
+          ? const SizedBox.shrink()
+          : Padding(
+              padding: const EdgeInsetsDirectional.symmetric(horizontal: 25.0),
+              child: SizedBox(
+                height: 50,
+                child: MainButton(
+                  onTap: _confirmOrder,
+                  text: 'Confirm',
+                ),
+              ),
+            ),
     );
+  }
+
+  double _calculateTotalPriceForItem(BasketItem item) {
+    double totalPrice = item.food.price * item.quantity;
+    if (item.selectedAddons != null) {
+      for (final addon in item.selectedAddons!) {
+        totalPrice += addon.price;
+      }
+    }
+    if (item.selectedRequiredOption != null) {
+      totalPrice += item.selectedRequiredOption!.price;
+    }
+    return totalPrice;
   }
 }

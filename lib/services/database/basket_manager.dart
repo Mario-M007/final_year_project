@@ -59,4 +59,8 @@ class BasketManager {
       item.quantity--;
     }
   }
+
+  static void clearBasket() {
+    _basketItems.clear();
+  }
 }

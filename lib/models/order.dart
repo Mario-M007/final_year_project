@@ -1,14 +1,12 @@
 import 'package:final_year_project/models/food.dart';
 
 class BasketItem {
-  String id;
   Food food;
   int quantity;
   List<Addon>? selectedAddons;
   RequiredOption? selectedRequiredOption;
 
   BasketItem({
-    required this.id,
     required this.food,
     required this.quantity,
     this.selectedAddons,
@@ -17,7 +15,7 @@ class BasketItem {
 
   @override
   String toString() {
-    return 'BasketItem: { id: $id, food: ${food.toString()}, quantity: $quantity, chosenAddons: $selectedAddons, chosenOpts: $selectedRequiredOption}\n';
+    return 'BasketItem: {food: ${food.toString()}, quantity: $quantity, chosenAddons: $selectedAddons, chosenOpts: $selectedRequiredOption}\n';
   }
 }
 
@@ -25,10 +23,13 @@ class Basket {
   List<BasketItem> basketItems;
 
   Basket({required this.basketItems});
+
+  factory Basket.fromItems(List<BasketItem> items) {
+    return Basket(basketItems: items);
+  }
 }
 
 class Orders {
-  late final String id;
   final String userId;
   final String restaurantId;
   final Basket basket;
@@ -37,7 +38,6 @@ class Orders {
   final OrderStatus orderStatus;
 
   Orders({
-    required this.id,
     required this.userId,
     required this.restaurantId,
     required this.basket,

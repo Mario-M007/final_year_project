@@ -278,7 +278,6 @@ class _MenuItemSelectionPageState extends State<MenuItemSelectionPage> {
                       return; // Exit the function without adding to cart
                     }
                     final newBasketItem = BasketItem(
-                      id: widget.menuItemId,
                       food: Food(
                         id: widget.menuItemId,
                         restaurantId: widget.menuItemRestaurantId,
