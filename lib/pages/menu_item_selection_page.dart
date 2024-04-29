@@ -1,10 +1,12 @@
+import 'package:final_year_project/models/order.dart';
+import 'package:final_year_project/services/database/basket_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:final_year_project/models/food.dart';
 import 'package:final_year_project/widgets/main_button.dart';
 import 'package:final_year_project/widgets/required_option_radio.dart';
 import 'package:final_year_project/widgets/addon_check_box.dart';
 
-class OrderSelectionPage extends StatefulWidget {
+class MenuItemSelectionPage extends StatefulWidget {
   final String menuItemId;
   final String menuItemRestaurantId;
   final String menuItemName;
@@ -13,10 +15,10 @@ class OrderSelectionPage extends StatefulWidget {
   final double menuItemPrice;
   final FoodCategory menuItemFoodCategory;
   final List<Addon> menuItemAddons;
-  final List<RequiredOptions> menuItemRequiredOptions;
+  final List<RequiredOption> menuItemRequiredOptions;
 
-  const OrderSelectionPage({
-    super.key,
+  const MenuItemSelectionPage({
+    Key? key,
     required this.menuItemId,
     required this.menuItemRestaurantId,
     required this.menuItemName,
@@ -26,19 +28,19 @@ class OrderSelectionPage extends StatefulWidget {
     required this.menuItemFoodCategory,
     required this.menuItemAddons,
     required this.menuItemRequiredOptions,
-  });
+  }) : super(key: key);
 
   @override
-  State<OrderSelectionPage> createState() => _OrderSelectionPageState();
+  State<MenuItemSelectionPage> createState() => _MenuItemSelectionPageState();
 }
 
-class _OrderSelectionPageState extends State<OrderSelectionPage> {
+class _MenuItemSelectionPageState extends State<MenuItemSelectionPage> {
   int quantity = 0;
 
   List<bool> addonCheckStates = [];
   List<Addon> selectedAddons = [];
 
-  int? selectedRequiredOption;
+  int? selectedRequiredOptionRadio;
 
   @override
   void initState() {
@@ -108,8 +110,8 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
-                child: Text("\$${widget.menuItemPrice}",
-                    style: Theme.of(context).textTheme.titleLarge),
+                child: Text("\$${widget.menuItemPrice.toStringAsFixed(2)}",
+                    style: Theme.of(context).textTheme.titleMedium),
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
@@ -169,10 +171,10 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
                           child: RequiredOptionRadio(
                             name: widget.menuItemRequiredOptions[i].name,
                             price: widget.menuItemRequiredOptions[i].price,
-                            isSelected: selectedRequiredOption == i,
+                            isSelected: selectedRequiredOptionRadio == i,
                             onChanged: (value) {
                               setState(() {
-                                selectedRequiredOption = value ? i : null;
+                                selectedRequiredOptionRadio = value ? i : null;
                               });
                             },
                           ),
@@ -198,7 +200,7 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
                     children: [
                       Padding(
                         padding: const EdgeInsetsDirectional.only(bottom: 15.0),
-                        child: Text("Extras",
+                        child: Text("Add-ons",
                             style: Theme.of(context).textTheme.titleLarge),
                       ),
                       for (int i = 0; i < widget.menuItemAddons.length; i++)
@@ -252,12 +254,67 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
             bottom: 30,
             child: Padding(
               padding: const EdgeInsetsDirectional.symmetric(horizontal: 25.0),
-              child: GestureDetector(
-                onTap: () {
-                  // Add functionality to add item to cart
-                },
-                child: MainButton(onTap: () {}, text: "Add to cart"),
-              ),
+              child: MainButton(
+                  onTap: () {
+                    // Check if quantity is greater than 0
+                    if (quantity <= 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Quantity must be greater than 0.'),
+                        ),
+                      );
+                      return; // Exit the function without adding to cart
+                    }
+
+                    // Check if required option is selected
+                    if (widget.menuItemRequiredOptions.isNotEmpty &&
+                        selectedRequiredOptionRadio == null) {
+                      // Show a dialog or snackbar indicating that a required option must be selected
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please select a required option.'),
+                        ),
+                      );
+                      return; // Exit the function without adding to cart
+                    }
+                    final newBasketItem = BasketItem(
+                      id: widget.menuItemId,
+                      food: Food(
+                        id: widget.menuItemId,
+                        restaurantId: widget.menuItemRestaurantId,
+                        name: widget.menuItemName,
+                        description: widget.menuItemDescription,
+                        imagePath: widget.menuItemImagePath,
+                        price: widget.menuItemPrice,
+                        foodCategory: widget.menuItemFoodCategory,
+                        availableAddons: selectedAddons,
+                        requiredOptions: selectedRequiredOptionRadio != null
+                            ? [
+                                widget.menuItemRequiredOptions[
+                                    selectedRequiredOptionRadio!]
+                              ]
+                            : [],
+                      ),
+                      quantity: quantity,
+                      selectedAddons: selectedAddons,
+                      selectedRequiredOption:
+                          selectedRequiredOptionRadio != null
+                              ? widget.menuItemRequiredOptions[
+                                  selectedRequiredOptionRadio!]
+                              : RequiredOption(name: 'none', price: 0),
+                    );
+
+                    // Add or update the item in the basket
+                    final updatedItem =
+                        BasketManager.addToBasket(newBasketItem);
+
+                    print(BasketManager.basketItems);
+
+                    // If the item was added to the basket as a new item,
+                    // close the current page and navigate back to the MenuPage
+                    Navigator.of(context).pop();
+                  },
+                  text: "Add to basket"),
             ),
           ),
         ],

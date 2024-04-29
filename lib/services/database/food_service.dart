@@ -32,10 +32,10 @@ class FoodService {
           ),
         )
         .toList();
-    final List<RequiredOptions> requiredOptions =
+    final List<RequiredOption> requiredOptions =
         (data['requiredOptions'] as List)
             .map(
-              (requiredOption) => RequiredOptions(
+              (requiredOption) => RequiredOption(
                 name: requiredOption['name'],
                 price: double.parse(
                   requiredOption['price'].toString(),

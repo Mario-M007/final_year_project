@@ -7,7 +7,7 @@ class Food {
   final double price;
   final FoodCategory foodCategory;
   List<Addon> availableAddons;
-  List<RequiredOptions> requiredOptions;
+  List<RequiredOption> requiredOptions;
 
   Food({
     required this.id,
@@ -20,6 +20,11 @@ class Food {
     required this.availableAddons,
     required this.requiredOptions,
   });
+
+  @override
+  String toString() {
+    return 'Food: { id: $id, restaurantId: $restaurantId, name: $name, description: $description, imagePath: $imagePath, price: $price, foodCategory: $foodCategory, availableAddons: $availableAddons, requiredOptions: $requiredOptions }';
+  }
 }
 
 enum FoodCategory {
@@ -38,14 +43,24 @@ class Addon {
     required this.name,
     required this.price,
   });
+
+  @override
+  String toString() {
+    return 'Addon: { name: $name, price: $price }';
+  }
 }
 
-class RequiredOptions {
+class RequiredOption {
   String name;
   double price;
 
-  RequiredOptions({
+  RequiredOption({
     required this.name,
     required this.price,
   });
+
+  @override
+  String toString() {
+    return 'RequiredOption: { name: $name, price: $price }';
+  }
 }

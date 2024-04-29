@@ -1,5 +1,5 @@
 import 'package:final_year_project/models/food.dart';
-import 'package:final_year_project/pages/order_selection_page.dart';
+import 'package:final_year_project/pages/menu_item_selection_page.dart';
 import 'package:final_year_project/services/database/food_service.dart';
 import 'package:flutter/material.dart';
 
@@ -86,7 +86,7 @@ class _MenuPageState extends State<MenuPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => OrderSelectionPage(
+                                  builder: (context) => MenuItemSelectionPage(
                                     menuItemId: food.id,
                                     menuItemRestaurantId: food.restaurantId,
                                     menuItemName: food.name,

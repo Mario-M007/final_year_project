@@ -63,7 +63,7 @@ class _AddonCheckBoxState extends State<AddonCheckBox> {
             ),
           ),
           Expanded(child: Text(widget.name)),
-          Text("\$${widget.price}")
+          Text(widget.price == 0 ? "" : "+\$${widget.price}")
         ],
       ),
     );

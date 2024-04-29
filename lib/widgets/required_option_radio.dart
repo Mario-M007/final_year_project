@@ -49,7 +49,7 @@ class RequiredOptionRadio extends StatelessWidget {
           ),
           Expanded(child: Text(name)),
           Text(
-            "\$${price.toStringAsFixed(2)}",
+            price == 0 ? "" : "+\$${price.toStringAsFixed(2)}",
           ),
         ],
       ),

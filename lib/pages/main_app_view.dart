@@ -1,6 +1,6 @@
 import 'package:final_year_project/pages/account_page.dart';
 import 'package:final_year_project/pages/home_page.dart';
-import 'package:final_year_project/pages/orders_page.dart';
+import 'package:final_year_project/pages/basket_page.dart';
 import 'package:final_year_project/pages/search_page.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +35,7 @@ class _MainAppViewState extends State<StatefulWidget> {
         children: const [
           HomePage(),
           SearchPage(),
-          OrderPage(),
+          BasketPage(),
           AccountPage(),
         ],
       ),
@@ -79,7 +79,7 @@ class _MainAppViewState extends State<StatefulWidget> {
               padding: EdgeInsetsDirectional.only(top: 14.0),
               child: Icon(Icons.shopping_basket),
             ),
-            label: 'Orders',
+            label: 'Basket',
           ),
           BottomNavigationBarItem(
             icon: Padding(
