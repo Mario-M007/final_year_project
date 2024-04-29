@@ -67,7 +67,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                         itemCount: basket.length,
                         itemBuilder: (context, basketIndex) {
                           final basketItem = basket[basketIndex];
-                          final foodName = basketItem['name'];
+                          final foodName = basketItem['foodName'];
                           final quantity = basketItem['quantity'];
 
                           return Text('- $foodName x $quantity');
