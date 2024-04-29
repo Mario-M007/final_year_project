@@ -32,6 +32,17 @@ class FoodService {
           ),
         )
         .toList();
+    final List<RequiredOptions> requiredOptions =
+        (data['requiredOptions'] as List)
+            .map(
+              (requiredOption) => RequiredOptions(
+                name: requiredOption['name'],
+                price: double.parse(
+                  requiredOption['price'].toString(),
+                ),
+              ),
+            )
+            .toList();
 
     return Food(
       id: doc.id.toString(),
@@ -42,6 +53,7 @@ class FoodService {
       price: double.parse(data['price'].toString()),
       foodCategory: FoodCategory.values.byName(data['foodCategory'].toString()),
       availableAddons: addons,
+      requiredOptions: requiredOptions,
     );
   }
 

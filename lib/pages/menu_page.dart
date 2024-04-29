@@ -95,6 +95,8 @@ class _MenuPageState extends State<MenuPage> {
                                     menuItemPrice: food.price,
                                     menuItemFoodCategory: food.foodCategory,
                                     menuItemAddons: food.availableAddons,
+                                    menuItemRequiredOptions:
+                                        food.requiredOptions,
                                   ),
                                 ),
                               );

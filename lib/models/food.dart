@@ -7,6 +7,7 @@ class Food {
   final double price;
   final FoodCategory foodCategory;
   List<Addon> availableAddons;
+  List<RequiredOptions> requiredOptions;
 
   Food({
     required this.id,
@@ -17,6 +18,7 @@ class Food {
     required this.price,
     required this.foodCategory,
     required this.availableAddons,
+    required this.requiredOptions,
   });
 }
 
@@ -33,6 +35,16 @@ class Addon {
   double price;
 
   Addon({
+    required this.name,
+    required this.price,
+  });
+}
+
+class RequiredOptions {
+  String name;
+  double price;
+
+  RequiredOptions({
     required this.name,
     required this.price,
   });

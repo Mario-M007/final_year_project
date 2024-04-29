@@ -1,8 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:final_year_project/models/food.dart';
 import 'package:final_year_project/widgets/main_button.dart';
-import 'package:flutter/material.dart';
+import 'package:final_year_project/widgets/required_option_radio.dart';
 import 'package:final_year_project/widgets/addon_check_box.dart';
-import 'package:flutter/widgets.dart';
 
 class OrderSelectionPage extends StatefulWidget {
   final String menuItemId;
@@ -13,6 +13,7 @@ class OrderSelectionPage extends StatefulWidget {
   final double menuItemPrice;
   final FoodCategory menuItemFoodCategory;
   final List<Addon> menuItemAddons;
+  final List<RequiredOptions> menuItemRequiredOptions;
 
   const OrderSelectionPage({
     super.key,
@@ -24,6 +25,7 @@ class OrderSelectionPage extends StatefulWidget {
     required this.menuItemPrice,
     required this.menuItemFoodCategory,
     required this.menuItemAddons,
+    required this.menuItemRequiredOptions,
   });
 
   @override
@@ -35,6 +37,8 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
 
   List<bool> addonCheckStates = [];
   List<Addon> selectedAddons = [];
+
+  int? selectedRequiredOption;
 
   @override
   void initState() {
@@ -120,6 +124,71 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
                 color: Color(0xFFF6F6F6),
               ),
               Visibility(
+                visible: widget.menuItemRequiredOptions.isNotEmpty,
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                      start: 25, end: 25, top: 15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text("Choose Option",
+                                  style:
+                                      Theme.of(context).textTheme.titleLarge),
+                            ),
+                            Container(
+                              padding: const EdgeInsetsDirectional.symmetric(
+                                  horizontal: 6),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEEEEEE),
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Text(
+                                "Required",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(
+                                      color: const Color(0xFF6B6B6B),
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      for (int i = 0;
+                          i < widget.menuItemRequiredOptions.length;
+                          i++)
+                        Padding(
+                          padding:
+                              const EdgeInsetsDirectional.only(bottom: 20.0),
+                          child: RequiredOptionRadio(
+                            name: widget.menuItemRequiredOptions[i].name,
+                            price: widget.menuItemRequiredOptions[i].price,
+                            isSelected: selectedRequiredOption == i,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedRequiredOption = value ? i : null;
+                              });
+                            },
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: widget.menuItemRequiredOptions.isNotEmpty,
+                child: const Divider(
+                  thickness: 10,
+                  color: Color(0xFFF6F6F6),
+                ),
+              ),
+              Visibility(
                 visible: widget.menuItemAddons.isNotEmpty,
                 child: Padding(
                   padding: const EdgeInsetsDirectional.only(
@@ -129,7 +198,7 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
                     children: [
                       Padding(
                         padding: const EdgeInsetsDirectional.only(bottom: 15.0),
-                        child: Text("Addons",
+                        child: Text("Extras",
                             style: Theme.of(context).textTheme.titleLarge),
                       ),
                       for (int i = 0; i < widget.menuItemAddons.length; i++)
