@@ -1,9 +1,30 @@
+import 'package:final_year_project/models/food.dart';
 import 'package:final_year_project/widgets/main_button.dart';
 import 'package:flutter/material.dart';
 import 'package:final_year_project/widgets/addon_check_box.dart';
+import 'package:flutter/widgets.dart';
 
 class OrderSelectionPage extends StatefulWidget {
-  const OrderSelectionPage({super.key});
+  final String menuItemId;
+  final String menuItemRestaurantId;
+  final String menuItemName;
+  final String menuItemDescription;
+  final String menuItemImagePath;
+  final double menuItemPrice;
+  final FoodCategory menuItemFoodCategory;
+  final List<Addon> menuItemAddons;
+
+  const OrderSelectionPage({
+    super.key,
+    required this.menuItemId,
+    required this.menuItemRestaurantId,
+    required this.menuItemName,
+    required this.menuItemDescription,
+    required this.menuItemImagePath,
+    required this.menuItemPrice,
+    required this.menuItemFoodCategory,
+    required this.menuItemAddons,
+  });
 
   @override
   State<OrderSelectionPage> createState() => _OrderSelectionPageState();
@@ -11,6 +32,26 @@ class OrderSelectionPage extends StatefulWidget {
 
 class _OrderSelectionPageState extends State<OrderSelectionPage> {
   int quantity = 0;
+
+  List<bool> addonCheckStates = [];
+  List<Addon> selectedAddons = [];
+
+  @override
+  void initState() {
+    super.initState();
+    addonCheckStates = List<bool>.filled(widget.menuItemAddons.length, false);
+  }
+
+  void toggleAddonCheckbox(int index) {
+    setState(() {
+      addonCheckStates[index] = !addonCheckStates[index];
+      if (addonCheckStates[index]) {
+        selectedAddons.add(widget.menuItemAddons[index]);
+      } else {
+        selectedAddons.remove(widget.menuItemAddons[index]);
+      }
+    });
+  }
 
   void incrementQuantity() {
     setState(() {
@@ -41,32 +82,35 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
         children: [
           ListView(
             children: [
-              const Padding(
-                padding: EdgeInsetsDirectional.only(bottom: 15),
-                child: SizedBox(
-                  width: 300,
-                  height: 150,
-                  child: Image(
-                    image: NetworkImage(
-                        'https://i.pinimg.com/originals/73/fd/cf/73fdcf738ad095f80c89ff41e52eb8ed.jpg'),
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
-              ),
+              widget.menuItemImagePath == "null"
+                  ? const SizedBox(
+                      height: 15,
+                    )
+                  : Padding(
+                      padding: const EdgeInsetsDirectional.only(bottom: 15),
+                      child: SizedBox(
+                        width: 300,
+                        height: 150,
+                        child: Image(
+                          image: NetworkImage(widget.menuItemImagePath),
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                    ),
               Padding(
                 padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
-                child: Text("Mushroom Pizza",
+                child: Text(widget.menuItemName,
                     style: Theme.of(context).textTheme.titleLarge),
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
-                child: Text("\$21.00",
+                child: Text("\$${widget.menuItemPrice}",
                     style: Theme.of(context).textTheme.titleLarge),
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
                 child: Text(
-                  "Garlic, olive oil base, mozarella, cremini mushrooms, ricotta, thyme, white truffle oil. Add arugula for an extra charge",
+                  widget.menuItemDescription,
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       color: const Color.fromARGB(255, 139, 139, 139)),
                 ),
@@ -75,36 +119,31 @@ class _OrderSelectionPageState extends State<OrderSelectionPage> {
                 thickness: 10,
                 color: Color(0xFFF6F6F6),
               ),
-              Padding(
-                padding: const EdgeInsetsDirectional.only(
-                    start: 25, end: 25, top: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsetsDirectional.only(bottom: 15.0),
-                      child: Text("Addons",
-                          style: Theme.of(context).textTheme.titleLarge),
-                    ),
-                    AddonCheckBox(
-                      value: false,
-                      onChanged: (value) {},
-                      name: "Extra cheese",
-                      price: 2.0,
-                    ),
-                    AddonCheckBox(
-                      value: false,
-                      onChanged: (value) {},
-                      name: "Extra cheese",
-                      price: 2.0,
-                    ),
-                    AddonCheckBox(
-                      value: false,
-                      onChanged: (value) {},
-                      name: "Extra cheese",
-                      price: 2.0,
-                    ),
-                  ],
+              Visibility(
+                visible: widget.menuItemAddons.isNotEmpty,
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                      start: 25, end: 25, top: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(bottom: 15.0),
+                        child: Text("Addons",
+                            style: Theme.of(context).textTheme.titleLarge),
+                      ),
+                      for (int i = 0; i < widget.menuItemAddons.length; i++)
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(bottom: 20),
+                          child: AddonCheckBox(
+                            value: addonCheckStates[i],
+                            onChanged: (value) => toggleAddonCheckbox(i),
+                            name: widget.menuItemAddons[i].name,
+                            price: widget.menuItemAddons[i].price,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ],

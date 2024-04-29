@@ -86,7 +86,16 @@ class _MenuPageState extends State<MenuPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const OrderSelectionPage(),
+                                  builder: (context) => OrderSelectionPage(
+                                    menuItemId: food.id,
+                                    menuItemRestaurantId: food.restaurantId,
+                                    menuItemName: food.name,
+                                    menuItemImagePath: food.imagePath,
+                                    menuItemDescription: food.description,
+                                    menuItemPrice: food.price,
+                                    menuItemFoodCategory: food.foodCategory,
+                                    menuItemAddons: food.availableAddons,
+                                  ),
                                 ),
                               );
                             },

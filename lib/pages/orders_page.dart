@@ -1,3 +1,4 @@
+import 'package:final_year_project/widgets/history_button.dart';
 import 'package:flutter/material.dart';
 
 class OrderPage extends StatefulWidget {
@@ -14,20 +15,33 @@ class _OrderPageState extends State<OrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: items.isEmpty
-          ? Center(
+          ? SafeArea(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset('lib/assets/cart.png'),
-                  const Text(
-                    'Add items to start a basket',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.symmetric(
+                        horizontal: 25, vertical: 25),
+                    child: HistoryButton(onTap: () {}, text: "History"),
                   ),
-                  const SizedBox(
-                    width: 300,
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(top: 70),
+                    child: Center(child: Image.asset('lib/assets/cart.png')),
+                  ),
+                  const Center(
                     child: Text(
-                      'Once you add items from a restuarant or store, your basket will appear here.',
+                      'Add items to start a basket',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const Center(
+                    child: SizedBox(
+                      width: 300,
+                      child: Text(
+                        'Once you add items from a restuarant or store, your basket will appear here.',
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ],
