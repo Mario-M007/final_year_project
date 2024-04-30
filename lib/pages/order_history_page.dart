@@ -10,9 +10,9 @@ class OrderHistoryPage extends StatefulWidget {
 }
 
 class _OrderHistoryPageState extends State<OrderHistoryPage> {
-  final _orderService =
-      OrderService(); // Assuming OrderService provides getOrdersByUserId
-  List<Map<String, dynamic>> orders = []; // List to store retrieved orders
+  final _orderService = OrderService();
+  List<Map<String, dynamic>> orders = [];
+  bool _isLoading = true; // Add a loading state variable
 
   @override
   void initState() {
@@ -24,69 +24,69 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId != null) {
       orders = await _orderService.getOrdersByUserId(userId);
-      setState(() {}); // Update UI after fetching orders
     } else {
       print('Error: User not signed in');
     }
+    setState(() {
+      _isLoading = false; // Set loading state to false after fetching data
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Order History'),
+        title: const Text('Order History'),
       ),
-      body: orders.isEmpty
-          ? Center(child: Text('No orders found'))
-          : ListView.builder(
-              itemCount: orders.length,
-              itemBuilder: (context, index) {
-                final orderData = orders[index];
-                // Extract data from orderData map
-                final orderId =
-                    orderData['orderId']; // Assuming orderId is added
-                final orderTime = orderData['orderTime'].toDate();
-                final totalPrice = orderData['totalPrice'];
-                final basket = orderData['basket'];
-                final restaurantName = orderData['restaurantName'];
+      body: _isLoading // Check loading state
+          ? const Center(
+              child: CircularProgressIndicator()) // Show loading indicator
+          : orders.isEmpty
+              ? const Center(child: Text('No orders found'))
+              : ListView.builder(
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) {
+                    final orderData = orders[index];
+                    final orderId = orderData['orderId'];
+                    final orderTime = orderData['orderTime'].toDate();
+                    final totalPrice = orderData['totalPrice'];
+                    final basket = orderData['basket'];
+                    final restaurantName = orderData['restaurantName'];
 
-                return ListTile(
-                  title: Text('Order #$orderId'),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Restaurant: $restaurantName'),
-                      Text('Date: ${formatDate(orderTime)}'),
-                      Text('Total: \$$totalPrice'),
-                      Text('Items:'),
-                      ListView.builder(
-                        shrinkWrap:
-                            true, // Prevent nested list from overflowing
-                        physics:
-                            NeverScrollableScrollPhysics(), // Disable scrolling
-                        itemCount: basket.length,
-                        itemBuilder: (context, basketIndex) {
-                          final basketItem = basket[basketIndex];
-                          final foodName = basketItem['foodName'];
-                          final quantity = basketItem['quantity'];
+                    return ListTile(
+                      title: Text('Order #$orderId'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Restaurant: $restaurantName'),
+                          Text('Date: ${formatDate(orderTime)}'),
+                          Text('Total: \$$totalPrice'),
+                          const Text('Items:'),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: basket.length,
+                            itemBuilder: (context, basketIndex) {
+                              final basketItem = basket[basketIndex];
+                              final foodName = basketItem['foodName'];
+                              final quantity = basketItem['quantity'];
 
-                          return Text('- $foodName x $quantity');
-                        },
+                              return Text('- $foodName x $quantity');
+                            },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                    );
+                  },
+                ),
     );
   }
 
-  // Implement formatDate function to format orderTime as needed (e.g., dd/MM/yyyy)
   String formatDate(DateTime timestamp) {
     final year = timestamp.year;
-    final month = timestamp.month.toString().padLeft(2, '0'); // Zero-pad month
-    final day = timestamp.day.toString().padLeft(2, '0'); // Zero-pad day
+    final month = timestamp.month.toString().padLeft(2, '0');
+    final day = timestamp.day.toString().padLeft(2, '0');
 
-    return '$day/$month/$year'; // Adjust format as needed
+    return '$day/$month/$year';
   }
 }

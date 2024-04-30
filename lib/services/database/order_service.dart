@@ -30,46 +30,52 @@ class OrderService {
 
   Future<List<Map<String, dynamic>>> getOrdersByUserId(String userId) async {
     try {
-      // Get all orders where userId matches the parameter
-      final orderDocs = await _firestore
+      // Query orders directly instead of filtering afterwards
+      final orderQuery = await _firestore
           .collection('orders')
           .where('userId', isEqualTo: userId)
+          .orderBy('orderTime',
+              descending: true) // Order by time for efficiency
           .get();
 
-      // Check if any orders were found
-      if (orderDocs.docs.isEmpty) {
+      if (orderQuery.docs.isEmpty) {
         return []; // Return empty list if no orders found
       }
 
-      // List to store final results
       final List<Map<String, dynamic>> ordersWithRestaurantName = [];
+      final List<Future<DocumentSnapshot>> restaurantDocsFutures = [];
 
       // Loop through retrieved documents
-      for (var doc in orderDocs.docs) {
-        final orderId = doc.id;
-        final restaurantId = doc['restaurantId'];
+      for (var orderDoc in orderQuery.docs) {
+        final orderId = orderDoc.id;
+        final restaurantId = orderDoc['restaurantId'];
+        restaurantDocsFutures
+            .add(_firestore.collection('restaurant').doc(restaurantId).get());
 
-        // Get restaurant document using restaurantId
-        final restaurantDoc =
-            await _firestore.collection('restaurant').doc(restaurantId).get();
+        // Create order data without restaurant name for now
+        final orderData = {
+          'orderId': orderId,
+          'orderTime': orderDoc['orderTime'],
+          'totalPrice': orderDoc['totalPrice'],
+          'basket': orderDoc['basket'],
+          'restaurantId': restaurantId,
+        };
 
-        // Check if restaurant document exists
+        ordersWithRestaurantName.add(orderData);
+      }
+
+      // Retrieve restaurant documents concurrently
+      final restaurantDocs = await Future.wait(restaurantDocsFutures);
+
+      // Loop through retrieved restaurant documents
+      for (var i = 0; i < restaurantDocs.length; i++) {
+        final restaurantDoc = restaurantDocs[i];
         if (restaurantDoc.exists) {
           final restaurantName = restaurantDoc['name'];
-
-          // Create order data with restaurant name
-          final orderData = {
-            'orderId': orderId, // Include order ID for potential use
-            'orderTime': doc['orderTime'],
-            'totalPrice': doc['totalPrice'],
-            'basket': doc['basket'],
-            'restaurantId': restaurantId,
-            'restaurantName': restaurantName,
-          };
-
-          ordersWithRestaurantName.add(orderData);
+          ordersWithRestaurantName[i]['restaurantName'] = restaurantName;
         } else {
-          print('Restaurant document not found for ID: $restaurantId');
+          print(
+              'Restaurant document not found for ID: ${orderQuery.docs[i]['restaurantId']}');
           // You can decide how to handle missing restaurant data here
         }
       }
