@@ -37,12 +37,13 @@ class _HomePageState extends State<HomePage> {
 
   List<Restaurant> _filteredRestaurants() {
     if (_selectedCategory == null) {
-      return _restaurants; // Show all restaurants if no category selected
+      return _restaurants.toList()..sort((a, b) => a.name.compareTo(b.name));
     }
     return _restaurants
         .where(
             (restaurant) => restaurant.restaurantCategory == _selectedCategory)
-        .toList();
+        .toList()
+      ..sort((a, b) => a.name.compareTo(b.name));
   }
 
   String categoryIconFor(RestaurantCategory category) {
@@ -51,9 +52,9 @@ class _HomePageState extends State<HomePage> {
         return "🍔";
       case RestaurantCategory.italian:
         return "🍝";
-      case RestaurantCategory.indian:
-        return "🥘";
-      case RestaurantCategory.lebanese:
+      case RestaurantCategory.asian:
+        return "🍣";
+      case RestaurantCategory.libanese:
         return "🧆";
       default:
         return "🍕"; // Or a default icon

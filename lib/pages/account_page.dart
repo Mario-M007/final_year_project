@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:final_year_project/pages/dummy_page.dart';
 import 'package:final_year_project/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
@@ -77,10 +76,7 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (builder) => MyTestWidget()));
-                },
+                onPressed: () {},
                 child: Row(
                   children: [
                     const Icon(Icons.settings),

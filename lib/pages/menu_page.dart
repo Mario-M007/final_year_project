@@ -129,9 +129,13 @@ class _MenuPageState extends State<MenuPage> {
                             ),
                             trailing: food.imagePath == 'null'
                                 ? const SizedBox.shrink()
-                                : Image(
-                                    image: NetworkImage(food.imagePath),
-                                  ),
+                                : SizedBox(
+                                  width: 100,
+                                  height: 100,
+                                  child: Image(
+                                      image: NetworkImage(food.imagePath),
+                                    ),
+                                ),
                           );
                         },
                       ),

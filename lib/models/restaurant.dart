@@ -15,6 +15,6 @@ class Restaurant {
 enum RestaurantCategory {
   american,
   italian,
-  indian,
-  lebanese,
+  asian,
+  libanese,
 }

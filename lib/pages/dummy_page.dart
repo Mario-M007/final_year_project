@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:final_year_project/models/food.dart';
 import 'package:flutter/material.dart';
 
 class MyTestWidget extends StatefulWidget {
@@ -20,64 +19,366 @@ class _MyTestWidgetState extends State<MyTestWidget> {
   }
 
   @override
-  Future<void> initState() async{
+  void initState() {
     super.initState();
 
     // Sample food items as JSON
-    final burgers = [
+    final mains = [
       {
-        "name": "Big Mac",
-        "description":
-            "Two all-beef patties, special sauce, lettuce, cheese, pickles, onions on a sesame seed bun",
-        "imagePath": "path/to/big_mac.jpg",
-        "price": 5.99,
-        "foodCategory": FoodCategory.mains.toString(),
-        "availableAddons": [],
-        "requiredOptions": [],
+        "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+        "name": "Big Mac Meal",
+        "description": "Big Mac with fries and drink",
+        "imagePath":
+            "https://s7d1.scene7.com/is/image/mcdonalds/Header_BigMacCombo_v1_832x472:nutrition-calculator-tile?wid=472&hei=472&dpr=off",
+        "price": 5.00,
+        "foodCategory": "mains",
+        "availableAddons": [
+          {"name": "Lettuce", "price": 0.1},
+          {"name": "Extra Patty", "price": 1.0},
+          {"name": "Pickles", "price": 0.1},
+          {"name": "Extra Sauce", "price": 0.2},
+          {"name": "Extra Cheese", "price": 0.3},
+        ],
+        "requiredOptions": [
+          {"name": "Regular", "price": 0},
+          {"name": "Medium", "price": 0.6},
+          {"name": "Large", "price": 1.2},
+        ],
       },
-      // ... Add similar JSON objects for other burgers
+      {
+        "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+        "name": "Big Tasty Meal",
+        "description": "Big Tasty with fries and drink",
+        "imagePath":
+            "https://s7d1.scene7.com/is/image/mcdonalds/bigtastymeal:1-3-product-tile-desktop?wid=765&hei=472&dpr=off",
+        "price": 6.50,
+        "foodCategory": "mains",
+        "availableAddons": [
+          {"name": "Lettuce", "price": 0.1},
+          {"name": "Extra Patty", "price": 1.0},
+          {"name": "Pickles", "price": 0.1},
+          {"name": "Extra Sauce", "price": 0.2},
+          {"name": "Extra Cheese", "price": 0.3},
+        ],
+        "requiredOptions": [
+          {"name": "Regular", "price": 0},
+          {"name": "Medium", "price": 0.6},
+          {"name": "Large", "price": 1.2},
+        ],
+      },
+      {
+        "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+        "name": "Quarter Pounder Meal",
+        "description": "Quarter Pounder with fries and drink",
+        "imagePath":
+            "https://s7d1.scene7.com/is/image/mcdonalds/DC_202201_8941_EVM_M_QuarterPounderCheese_Coke_Glass_832x472:1-3-product-tile-desktop?wid=765&hei=472&dpr=off",
+        "price": 5.10,
+        "foodCategory": "mains",
+        "availableAddons": [
+          {"name": "Lettuce", "price": 0.1},
+          {"name": "Extra Patty", "price": 1.0},
+          {"name": "Pickles", "price": 0.1},
+          {"name": "Extra Sauce", "price": 0.2},
+          {"name": "Extra Cheese", "price": 0.3},
+        ],
+        "requiredOptions": [
+          {"name": "Regular", "price": 0},
+          {"name": "Medium", "price": 0.6},
+          {"name": "Large", "price": 1.2},
+        ],
+      },
+      {
+        "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+        "name": "Chicken Mac Meal",
+        "description": "Chicken Mac with fries and drink",
+        "imagePath":
+            "https://mcdonalds.com.pk/wp-content/uploads/2022/08/03-Chicken-Mac.png",
+        "price": 5.00,
+        "foodCategory": "mains",
+        "availableAddons": [
+          {"name": "Lettuce", "price": 0.1},
+          {"name": "Extra Patty", "price": 1.0},
+          {"name": "Pickles", "price": 0.1},
+          {"name": "Extra Sauce", "price": 0.2},
+          {"name": "Extra Cheese", "price": 0.3},
+        ],
+        "requiredOptions": [
+          {"name": "Regular", "price": 0},
+          {"name": "Medium", "price": 0.6},
+          {"name": "Large", "price": 1.2},
+        ],
+      },
+      {
+        "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+        "name": "Grand Chicken Deluxe Meal",
+        "description": "Grand Chicken Deluxe with fries and drink",
+        "imagePath":
+            "https://s7d1.scene7.com/is/image/mcdonalds/grand-chicken-deluxe-meal-om-v3:nutrition-calculator-tile",
+        "price": 5.00,
+        "foodCategory": "mains",
+        "availableAddons": [
+          {"name": "Lettuce", "price": 0.1},
+          {"name": "Extra Patty", "price": 1.0},
+          {"name": "Pickles", "price": 0.1},
+          {"name": "Extra Sauce", "price": 0.2},
+          {"name": "Extra Cheese", "price": 0.3},
+        ],
+        "requiredOptions": [
+          {"name": "Regular", "price": 0},
+          {"name": "Medium", "price": 0.6},
+          {"name": "Large", "price": 1.2},
+        ],
+      },
+      {
+        "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+        "name": "Chicken Nuggets Meal",
+        "description": "Grand Chicken Deluxe with fries and drink",
+        "imagePath":
+            "https://s7d1.scene7.com/is/image/mcdonalds/9-spicy-nuggets-meal-riyadh-v1:1-3-product-tile-desktop?wid=829&hei=515&dpr=off",
+        "price": 5.00,
+        "foodCategory": "mains",
+        "availableAddons": [
+          {"name": "Extra Ketchup", "price": 0.2},
+          {"name": "Extra BBQ", "price": 0.2},
+          {"name": "Extra Sweet and Sour Sauce", "price": 0.2},
+        ],
+        "requiredOptions": [
+          {"name": "Regular", "price": 0},
+          {"name": "Medium", "price": 0.6},
+          {"name": "Large", "price": 1.2},
+        ],
+      },
+      // {
+      //   "name": "Salmon Sashimi",
+      //   "description": "freshly made sushi",
+      //   "imagePath":
+      //       "https://123099985.cdn6.editmysite.com/uploads/1/2/3/0/123099985/s747026458228626821_p112_i3_w6720.jpeg?width=2560",
+      //   "price": 15.00,
+      //   "foodCategory": "mains",
+      //   "availableAddons": [
+      //   ],
+      //   "requiredOptions": [
+      //   ],
+      // },
+      // {
+      //   "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+      //   "name": "Tuna Sashimi",
+      //   "description": "freshly made sushi",
+      //   "imagePath":
+      //       "https://123099985.cdn6.editmysite.com/uploads/1/2/3/0/123099985/s747026458228626821_p112_i3_w6720.jpeg?width=2560",
+      //   "price": 15.00,
+      //   "foodCategory": "mains",
+      //   "availableAddons": [
+      //   ],
+      //   "requiredOptions": [
+      //   ],
+      // },
+      // {
+      //   "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+      //   "name": "Ebi Sashimi",
+      //   "description": "freshly made sushi",
+      //   "imagePath":
+      //       "https://123099985.cdn6.editmysite.com/uploads/1/2/3/0/123099985/s747026458228626821_p112_i3_w6720.jpeg?width=2560",
+      //   "price": 15.00,
+      //   "foodCategory": "mains",
+      //   "availableAddons": [
+      //   ],
+      //   "requiredOptions": [
+      //   ],
+      // },
+      // {
+      //   "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+      //   "name": "Unagi Sashimi",
+      //   "description": "freshly made sushi",
+      //   "imagePath":
+      //       "https://123099985.cdn6.editmysite.com/uploads/1/2/3/0/123099985/s747026458228626821_p112_i3_w6720.jpeg?width=2560",
+      //   "price": 15.00,
+      //   "foodCategory": "mains",
+      //   "availableAddons": [
+      //   ],
+      //   "requiredOptions": [
+      //   ],
+      // },
+      // {
+      //   "restaurantId": "nPX8HQBnKdhGGnSPdKWF",
+      //   "name": "Yellow tail Sashimi",
+      //   "description": "freshly made sushi",
+      //   "imagePath":
+      //       "https://123099985.cdn6.editmysite.com/uploads/1/2/3/0/123099985/s747026458228626821_p112_i3_w6720.jpeg?width=2560",
+      //   "price": 15.00,
+      //   "foodCategory": "mains",
+      //   "availableAddons": [
+      //   ],
+      //   "requiredOptions": [
+      //   ],
+      // },
+      // {
+      //   "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+      //   "name": "Chicken Shawarma",
+      //   "description": "Heavenly tase",
+      //   "imagePath":
+      //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2NrOdOVjtkK95W_eRmKgLGle55eSZGGusGI_fdwNjAQ&s",
+      //   "price": 5.00,
+      //   "foodCategory": "mains",
+      //   "availableAddons": [
+      //   ],
+      //   "requiredOptions": [
+      //   ],
+      // },
+      // {
+      //   "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+      //   "name": "Beef Shawarma",
+      //   "description": "Heavenly tase",
+      //   "imagePath":
+      //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2NrOdOVjtkK95W_eRmKgLGle55eSZGGusGI_fdwNjAQ&s",
+      //   "price": 5.00,
+      //   "foodCategory": "mains",
+      //   "availableAddons": [
+      //   ],
+      //   "requiredOptions": [
+      //   ],
+      // },
+      // {
+      //   "restaurantId": "4aDFsIyHCgiAc3vkaKSJ",
+      //   "name": "Pepperoni Pizza",
+      //   "description": "can't beat the classics",
+      //   "imagePath":
+      //       "https://www.living-lebanon.com/images/extra_pictures/Don-Baker.jpg",
+      //   "price": 20.00,
+      //   "foodCategory": "mains",
+      //   "availableAddons": [
+      //   ],
+      //   "requiredOptions": [
+      //   ],
+      // },
+      // {
+      //   "restaurantId": "4aDFsIyHCgiAc3vkaKSJ",
+      //   "name": "Marguerita Pizza",
+      //   "description": "can't beat the classics",
+      //   "imagePath":
+      //       "https://www.thefreshloaf.com/files/u48327/Pizza-09-01-2014-d-Final-SRGB.jpg",
+      //   "price": 20.00,
+      //   "foodCategory": "mains",
+      //   "availableAddons": [
+      //   ],
+      //   "requiredOptions": [
+      //   ],
+      // },
     ];
 
-    final fries = {
-      "name": "French Fries",
-      "description": "Crispy golden fries",
-      "imagePath": "path/to/fries.jpg",
-      "price": 2.49,
-      "foodCategory": FoodCategory.sides.toString(),
-      "availableAddons": [],
-      "requiredOptions": [],
-    };
+    // final sides = [
+    //   {
+    //     "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+    //     "name": "French Fries",
+    //     "description": "Crispy golden fries",
+    //     "imagePath": "null",
+    //     "price": 2.49,
+    //     "foodCategory": "sides",
+    //     "availableAddons": [],
+    //     "requiredOptions": [],
+    //   },
+    //   {
+    //     "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+    //     "name": "4 Piece Nuggets",
+    //     "description": "Crispy golden nuggets",
+    //     "imagePath": "null",
+    //     "price": 2.2,
+    //     "foodCategory": "sides",
+    //     "availableAddons": [],
+    //     "requiredOptions": [],
+    //   },
+    //   {
+    //     "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+    //     "name": "6 Piece Nuggets",
+    //     "description": "Crispy golden nuggets",
+    //     "imagePath": "null",
+    //     "price": 3.2,
+    //     "foodCategory": "sides",
+    //     "availableAddons": [],
+    //     "requiredOptions": [],
+    //   },
+    //   {
+    //     "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+    //     "name": "9 Piece Nuggets",
+    //     "description": "Crispy golden nuggets",
+    //     "imagePath": "null",
+    //     "price": 4.2,
+    //     "foodCategory": "sides",
+    //     "availableAddons": [],
+    //     "requiredOptions": [],
+    //   },
+    // ];
+
+    // final salads = [
+    //   {
+    //     "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+    //     "name": "Chicken Caesar Salad",
+    //     "description": "A rich salad",
+    //     "imagePath":
+    //         "https://mcdelivery.mcdonalds.com.lb/lb//static/1713982516422/assets/961/products/1707.png?",
+    //     "price": 3.49,
+    //     "foodCategory": "salads",
+    //     "availableAddons": [],
+    //     "requiredOptions": [],
+    //   }
+    // ];
+
+    // final desserts = [
+    //   {
+    //     "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+    //     "name": "McFlurry",
+    //     "description": "",
+    //     "imagePath": "https://mcdelivery.mcdonalds.com.lb/lb//static/1713982516422/assets/961/products/2235.png?",
+    //     "price": 2.50,
+    //     "foodCategory": "desserts",
+    //     "availableAddons": [],
+    //     "requiredOptions": [
+    //       {"name": "Regular", "price": 0},
+    //       {"name": "Oreo", "price": 0},
+    //       {"name": "Kit-Kat", "price": 0},
+    //     ],
+    //   }
+    // ];
 
     final drinks = [
       {
+        "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
         "name": "Coca-Cola",
         "description": "Classic Coca-Cola",
-        "imagePath": "path/to/coke.jpg",
+        "imagePath": "null",
         "price": 1.99,
-        "foodCategory": FoodCategory.drinks.toString(),
+        "foodCategory": "drinks",
         "availableAddons": [],
         "requiredOptions": [],
       },
-      // ... Add similar JSON objects for other drinks
+      {
+        "restaurantId": "UdAgmn1IHu3Yfbt7Ayoo",
+        "name": "Iced Tea Peach",
+        "description": "Refreshing peach Iced Tea",
+        "imagePath": "null",
+        "price": 1.99,
+        "foodCategory": "drinks",
+        "availableAddons": [],
+        "requiredOptions": [],
+      },
     ];
 
-    foodItems.addAll(burgers);
-    foodItems.add(fries);
+    foodItems.addAll(mains);
+    // foodItems.addAll(sides);
+    // foodItems.addAll(salads);
     foodItems.addAll(drinks);
+    // foodItems.addAll(desserts);
 
     // Call saveFoodItems function (uncomment when ready)
-    await saveFoodItems();
+    saveFoodItems();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Food Items for Firestore'),
-      ),
+    return const Scaffold(
       body: Center(
         child: Text(
-          'Food items created as JSON. Uncomment saveFoodItems() to save them in Firestore.',
+          'Added dummy food data for db',
           style: TextStyle(fontSize: 16),
         ),
       ),

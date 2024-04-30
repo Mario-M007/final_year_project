@@ -36,7 +36,7 @@ class _CustomSwitchState extends State<CustomSwitch> {
         child: Stack(
           children: [
             AnimatedPositioned(
-              duration: Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,
               top: 2.0,
               left: widget.value ? 102.0 : 2.0,
@@ -52,10 +52,10 @@ class _CustomSwitchState extends State<CustomSwitch> {
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
                   widget.leftText,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 16.0,
                   ),
@@ -65,10 +65,10 @@ class _CustomSwitchState extends State<CustomSwitch> {
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
                   widget.rightText,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 16.0,
                   ),

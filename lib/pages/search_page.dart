@@ -46,6 +46,8 @@ class _SearchPageState extends State<SearchPage> {
         .where((restaurant) =>
             restaurant.name.toLowerCase().contains(query.toLowerCase()))
         .toList();
+    _filteredRestaurants
+        .sort((a, b) => a.name.compareTo(b.name)); // Sort filtered restaurants
     setState(() {});
   }
 
@@ -97,8 +99,17 @@ class _SearchPageState extends State<SearchPage> {
                     child: ListTile(
                       title: Text(restaurant.name),
                       leading: restaurant.imagePath.isNotEmpty
-                          ? Image.network(restaurant
-                              .imagePath) // Assuming imagePath is a URL
+                          ? SizedBox(
+                              width: 50,
+                              height: 100,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.network(
+                                  restaurant.imagePath,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ) // Assuming imagePath is a URL
                           : null, // Handle restaurants without images
                       onTap: () {
                         // Handle restaurant selection (you can access menu here)
