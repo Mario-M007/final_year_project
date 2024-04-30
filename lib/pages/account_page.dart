@@ -63,7 +63,15 @@ class _AccountPageState extends State<AccountPage> {
               Padding(
                 padding: const EdgeInsetsDirectional.symmetric(vertical: 20),
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showAboutDialog(
+                        context: context,
+                        applicationName: "MenuMate",
+                        children: [
+                          const Text(
+                              "This is a final year project written in Flutter.\nFor any Assitance, please contact the author Mario Maarawi"),
+                        ]);
+                  },
                   child: Row(
                     children: [
                       const Icon(Icons.help),
@@ -76,7 +84,54 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (builder) {
+                      String newName =
+                          _displayName; // Initialize newName with current display name
+                      return AlertDialog(
+                        title: const Text('Change Display Name'),
+                        content: TextField(
+                          decoration: const InputDecoration(
+                            hintText: 'Enter new display name',
+                          ),
+                          onChanged: (value) {
+                            newName = value; // Update newName as the user types
+                          },
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              // Close the dialog immediately
+                              Navigator.pop(context);
+
+                              // Update display name only if user clicks "Save"
+                              setState(() {
+                                _displayName = newName;
+                              });
+
+                              final authService = AuthService();
+                              try {
+                                await authService.updateDisplayName(newName);
+                              } catch (error) {
+                                log(error.toString());
+                                // Handle error if needed
+                              }
+                            },
+                            child: const Text('Save'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
                 child: Row(
                   children: [
                     const Icon(Icons.settings),

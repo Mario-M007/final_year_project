@@ -27,7 +27,7 @@ class AuthService {
     try {
       UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
-          await userCredential.user?.updateDisplayName(username);
+      await userCredential.user?.updateDisplayName(username);
       return userCredential;
     } on FirebaseAuthException catch (error) {
       throw Exception(error.code);
@@ -38,6 +38,15 @@ class AuthService {
   Future<String?> getUserDisplayName() async {
     final user = _firebaseAuth.currentUser;
     return user?.displayName; // Return display name or null if not set
+  }
+
+  Future<void> updateDisplayName(String displayName) async {
+    final user = _firebaseAuth.currentUser;
+    try {
+      await user?.updateDisplayName(displayName);
+    } catch (error) {
+      throw Exception(error.toString());
+    }
   }
 
   // sign out
