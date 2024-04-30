@@ -1,5 +1,7 @@
 import 'package:final_year_project/models/order.dart';
+import 'package:final_year_project/models/restaurant.dart';
 import 'package:final_year_project/services/database/basket_manager.dart';
+import 'package:final_year_project/services/database/restaurant_service.dart';
 import 'package:flutter/material.dart';
 import 'package:final_year_project/models/food.dart';
 import 'package:final_year_project/widgets/main_button.dart';
@@ -44,6 +46,8 @@ class _MenuItemSelectionPageState extends State<MenuItemSelectionPage> {
 
   int? selectedRequiredOptionRadio;
 
+  late final RestaurantService _restaurantService = RestaurantService();
+
   @override
   void initState() {
     super.initState();
@@ -73,6 +77,108 @@ class _MenuItemSelectionPageState extends State<MenuItemSelectionPage> {
         quantity--;
       });
     }
+  }
+
+  void _addToBasket() {
+    // Check if quantity is greater than 0
+    if (quantity <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Quantity must be greater than 0.'),
+        ),
+      );
+      return; // Exit the function without adding to cart
+    }
+
+    // Check if required option is selected
+    if (widget.menuItemRequiredOptions.isNotEmpty &&
+        selectedRequiredOptionRadio == null) {
+      // Show a dialog or snackbar indicating that a required option must be selected
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a required option.'),
+        ),
+      );
+      return; // Exit the function without adding to cart
+    }
+
+    final newBasketItem = BasketItem(
+      food: Food(
+        id: widget.menuItemId,
+        restaurantId: widget.menuItemRestaurantId,
+        name: widget.menuItemName,
+        description: widget.menuItemDescription,
+        imagePath: widget.menuItemImagePath,
+        price: widget.menuItemPrice,
+        foodCategory: widget.menuItemFoodCategory,
+        availableAddons: selectedAddons,
+        requiredOptions: selectedRequiredOptionRadio != null
+            ? [widget.menuItemRequiredOptions[selectedRequiredOptionRadio!]]
+            : [],
+      ),
+      quantity: quantity,
+      selectedAddons: selectedAddons,
+      selectedRequiredOption: selectedRequiredOptionRadio != null
+          ? widget.menuItemRequiredOptions[selectedRequiredOptionRadio!]
+          : null,
+    );
+
+    // Add or update the item in the basket
+    BasketManager.addToBasket(newBasketItem);
+
+    BasketManager.setIsForDelivery(widget.isForDelivery);
+
+    print(BasketManager.basketItems);
+
+    // If the item was added to the basket as a new item,
+    // close the current page and navigate back to the MenuPage
+    Navigator.of(context).pop();
+  }
+
+  Future<void> _showNewBasketConfirmationDialog(String restaurantId) async {
+    Restaurant? restaurant =
+        await _restaurantService.getRestaurantById(restaurantId);
+    String restaurantName = restaurant!.name;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible:
+          false, // Prevents dialog from being dismissed by tapping outside
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Start a New Basket?'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('You already have item(s) from $restaurantName.'),
+                const Text('Would you like to start a new basket?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Clear the existing basket and start a new one
+                BasketManager.clearBasket();
+                _addToBasket();
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Container(
+                  padding: const EdgeInsetsDirectional.all(12),
+                  decoration: BoxDecoration(
+                      color: const Color(0xFF0EA976).withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: const Text('Confirm')),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -258,63 +364,16 @@ class _MenuItemSelectionPageState extends State<MenuItemSelectionPage> {
               padding: const EdgeInsetsDirectional.symmetric(horizontal: 25.0),
               child: MainButton(
                   onTap: () {
-                    // Check if quantity is greater than 0
-                    if (quantity <= 0) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Quantity must be greater than 0.'),
-                        ),
-                      );
-                      return; // Exit the function without adding to cart
+                    // Check if the selected item is from a different restaurant
+                    if (BasketManager.basketItems.isNotEmpty &&
+                        BasketManager.basketItems.first.food.restaurantId !=
+                            widget.menuItemRestaurantId) {
+                      // Show confirmation dialog to start a new basket
+                      _showNewBasketConfirmationDialog(
+                          BasketManager.basketItems.first.food.restaurantId);
+                      return; // Exit the function
                     }
-
-                    // Check if required option is selected
-                    if (widget.menuItemRequiredOptions.isNotEmpty &&
-                        selectedRequiredOptionRadio == null) {
-                      // Show a dialog or snackbar indicating that a required option must be selected
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Please select a required option.'),
-                        ),
-                      );
-                      return; // Exit the function without adding to cart
-                    }
-                    final newBasketItem = BasketItem(
-                      food: Food(
-                        id: widget.menuItemId,
-                        restaurantId: widget.menuItemRestaurantId,
-                        name: widget.menuItemName,
-                        description: widget.menuItemDescription,
-                        imagePath: widget.menuItemImagePath,
-                        price: widget.menuItemPrice,
-                        foodCategory: widget.menuItemFoodCategory,
-                        availableAddons: selectedAddons,
-                        requiredOptions: selectedRequiredOptionRadio != null
-                            ? [
-                                widget.menuItemRequiredOptions[
-                                    selectedRequiredOptionRadio!]
-                              ]
-                            : [],
-                      ),
-                      quantity: quantity,
-                      selectedAddons: selectedAddons,
-                      selectedRequiredOption:
-                          selectedRequiredOptionRadio != null
-                              ? widget.menuItemRequiredOptions[
-                                  selectedRequiredOptionRadio!]
-                              : null,
-                    );
-
-                    // Add or update the item in the basket
-                    BasketManager.addToBasket(newBasketItem);
-
-                    BasketManager.setIsForDelivery(widget.isForDelivery);
-
-                    print(BasketManager.basketItems);
-
-                    // If the item was added to the basket as a new item,
-                    // close the current page and navigate back to the MenuPage
-                    Navigator.of(context).pop();
+                    _addToBasket();
                   },
                   text: "Add to basket"),
             ),

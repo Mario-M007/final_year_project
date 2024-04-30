@@ -9,6 +9,22 @@ class RestaurantService {
     return snapshot.docs.map((doc) => _fromDocument(doc)).toList();
   }
 
+  Future<Restaurant?> getRestaurantById(String restaurantId) async {
+    try {
+      final snapshot =
+          await _firestore.collection('restaurant').doc(restaurantId).get();
+      if (snapshot.exists) {
+        return _fromDocument(snapshot);
+      } else {
+        print('Restaurant not found for ID: $restaurantId');
+        return null;
+      }
+    } catch (e) {
+      print('Error getting restaurant by ID: $e');
+      throw e;
+    }
+  }
+
   Restaurant _fromDocument(DocumentSnapshot doc) {
     final data = doc.data()! as Map;
     final String name = data['name'] as String;
