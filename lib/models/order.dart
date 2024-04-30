@@ -30,6 +30,7 @@ class Basket {
 }
 
 class Orders {
+  final bool isForDelivery;
   final String userId;
   final String restaurantId;
   final Basket basket;
@@ -38,6 +39,7 @@ class Orders {
   final OrderStatus orderStatus;
 
   Orders({
+    required this.isForDelivery,
     required this.userId,
     required this.restaurantId,
     required this.basket,

@@ -6,6 +6,10 @@ class BasketManager {
 
   static List<BasketItem> get basketItems => _basketItems;
 
+  static bool _isForDelivery = false;
+
+  static bool get isForDelivery => _isForDelivery;
+
   static BasketItem addToBasket(BasketItem newItem) {
     // Check if an identical item already exists in the basket
     final existingItemIndex = _basketItems.indexWhere((element) =>
@@ -62,5 +66,9 @@ class BasketManager {
 
   static void clearBasket() {
     _basketItems.clear();
+  }
+
+  static void setIsForDelivery(bool isForDelivery) {
+    _isForDelivery = isForDelivery;
   }
 }

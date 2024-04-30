@@ -12,6 +12,7 @@ class OrderService {
         'totalPrice': order.totalPrice,
         'orderTime': order.orderTime,
         'orderStatus': order.orderStatus.toString(),
+        'isForDelivery': order.isForDelivery,
         'basket': order.basket.basketItems
             .map((item) => {
                   'foodId': item.food.id,

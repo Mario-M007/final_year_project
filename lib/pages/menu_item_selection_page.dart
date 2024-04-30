@@ -16,6 +16,7 @@ class MenuItemSelectionPage extends StatefulWidget {
   final FoodCategory menuItemFoodCategory;
   final List<Addon> menuItemAddons;
   final List<RequiredOption> menuItemRequiredOptions;
+  final bool isForDelivery;
 
   const MenuItemSelectionPage({
     super.key,
@@ -28,6 +29,7 @@ class MenuItemSelectionPage extends StatefulWidget {
     required this.menuItemFoodCategory,
     required this.menuItemAddons,
     required this.menuItemRequiredOptions,
+    required this.isForDelivery,
   });
 
   @override
@@ -305,6 +307,8 @@ class _MenuItemSelectionPageState extends State<MenuItemSelectionPage> {
 
                     // Add or update the item in the basket
                     BasketManager.addToBasket(newBasketItem);
+
+                    BasketManager.setIsForDelivery(widget.isForDelivery);
 
                     print(BasketManager.basketItems);
 

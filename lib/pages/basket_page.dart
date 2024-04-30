@@ -62,12 +62,12 @@ class _BasketPageState extends State<BasketPage> {
         restaurantId = basketItems.first.food.restaurantId;
       }
 
-
       // Create a Basket object from the list of basket items
       Basket basket = Basket.fromItems(basketItems);
 
       // Create an Order object from the basket items
       final order = Orders(
+        isForDelivery: BasketManager.isForDelivery,
         userId: userId,
         restaurantId: restaurantId,
         totalPrice: _calculateTotalPrice(),

@@ -1,6 +1,7 @@
 import 'package:final_year_project/models/food.dart';
 import 'package:final_year_project/pages/menu_item_selection_page.dart';
 import 'package:final_year_project/services/database/food_service.dart';
+import 'package:final_year_project/widgets/custom_switch.dart';
 import 'package:flutter/material.dart';
 
 class MenuPage extends StatefulWidget {
@@ -34,11 +35,27 @@ class _MenuPageState extends State<MenuPage> {
     });
   }
 
+  bool isForDelivery = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.restaurantName),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(50.0),
+          child: CustomSwitch(
+            leftText: 'dine-in',
+            rightText: 'delivery',
+            value: isForDelivery,
+            onChanged: (newValue) {
+              setState(() {
+                isForDelivery = newValue;
+                print(isForDelivery);
+              });
+            },
+          ),
+        ),
       ),
       body: SafeArea(
         child: isLoading
@@ -97,6 +114,7 @@ class _MenuPageState extends State<MenuPage> {
                                     menuItemAddons: food.availableAddons,
                                     menuItemRequiredOptions:
                                         food.requiredOptions,
+                                       isForDelivery: isForDelivery,
                                   ),
                                 ),
                               );

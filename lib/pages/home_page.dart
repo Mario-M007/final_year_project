@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                                     isSelected ? null : category;
                               }),
                               backgroundColor: isSelected
-                                  ? const Color(0xFFEA8D1F).withOpacity(0.7)
+                                  ? const Color(0xFFEA8D1F)
                                   : Colors.white,
                             ),
                           );
