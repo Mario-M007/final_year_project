@@ -59,6 +59,7 @@ class OrderService {
           'totalPrice': orderDoc['totalPrice'],
           'basket': orderDoc['basket'],
           'restaurantId': restaurantId,
+          'isForDelivery': orderDoc['isForDelivery'],
         };
 
         ordersWithRestaurantName.add(orderData);

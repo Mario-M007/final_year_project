@@ -52,6 +52,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                     final totalPrice = orderData['totalPrice'];
                     final basket = orderData['basket'];
                     final restaurantName = orderData['restaurantName'];
+                    final isForDelivery = orderData['isForDelivery'];
 
                     return ListTile(
                       title: Text('Order #$orderId'),
@@ -60,6 +61,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                         children: [
                           Text('Restaurant: $restaurantName'),
                           Text('Date: ${formatDate(orderTime)}'),
+                          Text(isForDelivery ? 'Delivery' : 'Pick Up'),
                           Text('Total: \$$totalPrice'),
                           const Text('Items:'),
                           ListView.builder(
