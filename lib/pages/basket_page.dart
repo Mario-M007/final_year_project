@@ -8,7 +8,7 @@ import 'package:final_year_project/models/order.dart';
 import 'package:final_year_project/services/database/basket_manager.dart';
 
 class BasketPage extends StatefulWidget {
-  const BasketPage({Key? key}) : super(key: key);
+  const BasketPage({super.key});
 
   @override
   State<BasketPage> createState() => _BasketPageState();

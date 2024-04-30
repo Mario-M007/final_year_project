@@ -69,7 +69,7 @@ class _AccountPageState extends State<AccountPage> {
                         applicationName: "MenuMate",
                         children: [
                           const Text(
-                              "This is a final year project written in Flutter.\nFor any Assitance, please contact the author Mario Maarawi"),
+                              "This is a final year project written in Flutter.\nFor any assitance, please contact the author Mario Maarawi"),
                         ]);
                   },
                   child: Row(

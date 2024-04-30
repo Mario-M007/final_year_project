@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class OrderHistoryPage extends StatefulWidget {
-  const OrderHistoryPage({Key? key}) : super(key: key);
+  const OrderHistoryPage({super.key});
 
   @override
   _OrderHistoryPageState createState() => _OrderHistoryPageState();
@@ -62,7 +62,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                           Text('Restaurant: $restaurantName'),
                           Text('Date: ${formatDate(orderTime)}'),
                           Text(isForDelivery ? 'Delivery' : 'Pick Up'),
-                          Text('Total: \$$totalPrice'),
+                          Text('Total: \$${totalPrice.toStringAsFixed(2)}'),
                           const Text('Items:'),
                           ListView.builder(
                             shrinkWrap: true,
