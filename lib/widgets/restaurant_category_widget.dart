@@ -31,9 +31,9 @@ class RestaurantCategoryWidget extends StatelessWidget {
         side: MaterialStateProperty.all(
           const BorderSide(
             color: Color(0xFFDBDBDB),
-            width: 2,
           ),
         ),
+        elevation: MaterialStateProperty.all(0),
       ),
       onPressed: onPressed,
       child: Column(

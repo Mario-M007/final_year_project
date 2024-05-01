@@ -186,7 +186,7 @@ class _BasketPageState extends State<BasketPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Selected Addons:'),
+                            const Text('Selected Addons:'),
                             ...selectedAddons.map((addon) => Text(
                                 '${addon.name} (+\$${(addon.price * item.quantity).toStringAsFixed(2)})')),
                           ],
