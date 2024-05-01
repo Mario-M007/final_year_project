@@ -1,14 +1,14 @@
-import 'package:final_year_project/pages/order_history_page.dart';
-import 'package:final_year_project/services/database/order_service.dart';
-import 'package:final_year_project/widgets/history_button.dart';
-import 'package:final_year_project/widgets/main_button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:final_year_project/models/order.dart';
 import 'package:final_year_project/services/database/basket_manager.dart';
+import 'package:final_year_project/services/database/order_service.dart';
+import 'package:final_year_project/widgets/history_button.dart';
+import 'package:final_year_project/widgets/main_button.dart';
+import 'package:final_year_project/pages/order_history_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class BasketPage extends StatefulWidget {
-  const BasketPage({super.key});
+  const BasketPage({Key? key}) : super(key: key);
 
   @override
   State<BasketPage> createState() => _BasketPageState();
@@ -97,15 +97,23 @@ class _BasketPageState extends State<BasketPage> {
   double _calculateTotalPrice() {
     double totalPrice = 0;
     for (final item in basketItems) {
-      totalPrice += item.food.price * item.quantity;
-      if (item.selectedAddons != null) {
-        for (final addon in item.selectedAddons!) {
-          totalPrice += addon.price;
-        }
+      totalPrice += _calculateTotalPriceForItem(
+          item); // Update total price calculation for each item
+    }
+    return totalPrice;
+  }
+
+  double _calculateTotalPriceForItem(BasketItem item) {
+    double totalPrice = item.food.price * item.quantity;
+    if (item.selectedAddons != null) {
+      for (final addon in item.selectedAddons!) {
+        totalPrice +=
+            addon.price * item.quantity; // Update addon price calculation
       }
-      if (item.selectedRequiredOption != null) {
-        totalPrice += item.selectedRequiredOption!.price;
-      }
+    }
+    if (item.selectedRequiredOption != null) {
+      totalPrice += item.selectedRequiredOption!.price *
+          item.quantity; // Update selected option price calculation
     }
     return totalPrice;
   }
@@ -125,16 +133,16 @@ class _BasketPageState extends State<BasketPage> {
                     padding: const EdgeInsetsDirectional.symmetric(
                         horizontal: 25, vertical: 25),
                     child: HistoryButton(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const OrderHistoryPage(), // Your order history page
-                            ),
-                          );
-                        },
-                        text: "History"),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const OrderHistoryPage(),
+                          ),
+                        );
+                      },
+                      text: "History",
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsetsDirectional.only(top: 70),
@@ -164,10 +172,28 @@ class _BasketPageState extends State<BasketPage> {
               itemBuilder: (context, index) {
                 final item = basketItems[index];
                 final totalPrice = _calculateTotalPriceForItem(item);
+                final selectedAddons = item.selectedAddons ?? [];
+                final selectedRequiredOption = item.selectedRequiredOption;
                 return ListTile(
                   title: Text(item.food.name),
-                  subtitle:
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (selectedRequiredOption != null)
+                        Text(
+                            'Selected Option: ${selectedRequiredOption.name} (+\$${(selectedRequiredOption.price * item.quantity).toStringAsFixed(2)})'),
+                      if (selectedAddons.isNotEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Selected Addons:'),
+                            ...selectedAddons.map((addon) => Text(
+                                '${addon.name} (+\$${(addon.price * item.quantity).toStringAsFixed(2)})')),
+                          ],
+                        ),
                       Text('Total Price: \$${totalPrice.toStringAsFixed(2)}'),
+                    ],
+                  ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -199,18 +225,5 @@ class _BasketPageState extends State<BasketPage> {
               ),
             ),
     );
-  }
-
-  double _calculateTotalPriceForItem(BasketItem item) {
-    double totalPrice = item.food.price * item.quantity;
-    if (item.selectedAddons != null) {
-      for (final addon in item.selectedAddons!) {
-        totalPrice += addon.price;
-      }
-    }
-    if (item.selectedRequiredOption != null) {
-      totalPrice += item.selectedRequiredOption!.price;
-    }
-    return totalPrice;
   }
 }
