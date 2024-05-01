@@ -63,7 +63,7 @@ class _BasketPageState extends State<BasketPage> {
       }
 
       // Create a Basket object from the list of basket items
-      Basket basket = Basket.fromItems(basketItems);
+      Basket basket = Basket(basketItems:basketItems);
 
       // Create an Order object from the basket items
       final order = Orders(

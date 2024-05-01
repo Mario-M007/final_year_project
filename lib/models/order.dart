@@ -23,10 +23,6 @@ class Basket {
   List<BasketItem> basketItems;
 
   Basket({required this.basketItems});
-
-  factory Basket.fromItems(List<BasketItem> items) {
-    return Basket(basketItems: items);
-  }
 }
 
 class Orders {
