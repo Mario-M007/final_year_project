@@ -192,194 +192,191 @@ class _MenuItemSelectionPageState extends State<MenuItemSelectionPage> {
           },
         ),
       ),
-      body: Stack(
+      body: ListView(
         children: [
-          ListView(
-            children: [
-              widget.menuItemImagePath == "null"
-                  ? const SizedBox(
-                      height: 15,
-                    )
-                  : Padding(
-                      padding: const EdgeInsetsDirectional.only(bottom: 15),
-                      child: SizedBox(
-                        width: 300,
-                        height: 150,
-                        child: Image(
-                          image: NetworkImage(widget.menuItemImagePath),
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
+          widget.menuItemImagePath == "null"
+              ? const SizedBox(
+                  height: 15,
+                )
+              : Padding(
+                  padding: const EdgeInsetsDirectional.only(bottom: 15),
+                  child: SizedBox(
+                    width: 300,
+                    height: 150,
+                    child: Image(
+                      image: NetworkImage(widget.menuItemImagePath),
+                      fit: BoxFit.fitWidth,
                     ),
-              Padding(
-                padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
-                child: Text(widget.menuItemName,
-                    style: Theme.of(context).textTheme.titleLarge),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
-                child: Text("\$${widget.menuItemPrice.toStringAsFixed(2)}",
-                    style: Theme.of(context).textTheme.titleMedium),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
-                child: Text(
-                  widget.menuItemDescription,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: const Color.fromARGB(255, 139, 139, 139)),
-                ),
-              ),
-              const Divider(
-                thickness: 10,
-                color: Color(0xFFF6F6F6),
-              ),
-              Visibility(
-                visible: widget.menuItemRequiredOptions.isNotEmpty,
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                      start: 25, end: 25, top: 15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text("Choose Option",
-                                  style:
-                                      Theme.of(context).textTheme.titleLarge),
-                            ),
-                            Container(
-                              padding: const EdgeInsetsDirectional.symmetric(
-                                  horizontal: 6),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFEEEEEE),
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              child: Text(
-                                "Required",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(
-                                      color: const Color(0xFF6B6B6B),
-                                    ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      for (int i = 0;
-                          i < widget.menuItemRequiredOptions.length;
-                          i++)
-                        Padding(
-                          padding:
-                              const EdgeInsetsDirectional.only(bottom: 20.0),
-                          child: RequiredOptionRadio(
-                            name: widget.menuItemRequiredOptions[i].name,
-                            price: widget.menuItemRequiredOptions[i].price,
-                            isSelected: selectedRequiredOptionRadio == i,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedRequiredOptionRadio = value ? i : null;
-                              });
-                            },
-                          ),
-                        ),
-                    ],
                   ),
                 ),
-              ),
-              Visibility(
-                visible: widget.menuItemRequiredOptions.isNotEmpty,
-                child: const Divider(
-                  thickness: 10,
-                  color: Color(0xFFF6F6F6),
-                ),
-              ),
-              Visibility(
-                visible: widget.menuItemAddons.isNotEmpty,
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                      start: 25, end: 25, top: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsetsDirectional.only(bottom: 15.0),
-                        child: Text("Add-ons",
-                            style: Theme.of(context).textTheme.titleLarge),
-                      ),
-                      for (int i = 0; i < widget.menuItemAddons.length; i++)
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(bottom: 20),
-                          child: AddonCheckBox(
-                            value: addonCheckStates[i],
-                            onChanged: (value) => toggleAddonCheckbox(i),
-                            name: widget.menuItemAddons[i].name,
-                            price: widget.menuItemAddons[i].price,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
+            child: Text(widget.menuItemName,
+                style: Theme.of(context).textTheme.titleLarge),
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 100,
+          Padding(
+            padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
+            child: Text("\$${widget.menuItemPrice.toStringAsFixed(2)}",
+                style: Theme.of(context).textTheme.titleMedium),
+          ),
+          Padding(
+            padding: const EdgeInsetsDirectional.symmetric(horizontal: 20),
+            child: Text(
+              widget.menuItemDescription,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: const Color.fromARGB(255, 139, 139, 139)),
+            ),
+          ),
+          const Divider(
+            thickness: 10,
+            color: Color(0xFFF6F6F6),
+          ),
+          Visibility(
+            visible: widget.menuItemRequiredOptions.isNotEmpty,
             child: Padding(
-              padding: const EdgeInsetsDirectional.symmetric(horizontal: 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              padding: const EdgeInsetsDirectional.only(
+                  start: 25, end: 25, top: 15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.remove),
-                    onPressed: decrementQuantity,
-                  ),
-                  SizedBox(
-                    width: 40,
-                    child: Text(
-                      '$quantity',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text("Choose Option",
+                              style: Theme.of(context).textTheme.titleLarge),
+                        ),
+                        Container(
+                          padding: const EdgeInsetsDirectional.symmetric(
+                              horizontal: 6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEEEEEE),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: Text(
+                            "Required",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  color: const Color(0xFF6B6B6B),
+                                ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: incrementQuantity,
-                  ),
+                  for (int i = 0;
+                      i < widget.menuItemRequiredOptions.length;
+                      i++)
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(bottom: 20.0),
+                      child: RequiredOptionRadio(
+                        name: widget.menuItemRequiredOptions[i].name,
+                        price: widget.menuItemRequiredOptions[i].price,
+                        isSelected: selectedRequiredOptionRadio == i,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedRequiredOptionRadio = value ? i : null;
+                          });
+                        },
+                      ),
+                    ),
                 ],
               ),
             ),
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 30,
+          Visibility(
+            visible: widget.menuItemRequiredOptions.isNotEmpty,
+            child: const Divider(
+              thickness: 10,
+              color: Color(0xFFF6F6F6),
+            ),
+          ),
+          Visibility(
+            visible: widget.menuItemAddons.isNotEmpty,
             child: Padding(
-              padding: const EdgeInsetsDirectional.symmetric(horizontal: 25.0),
-              child: MainButton(
-                  onTap: () {
-                    // Check if the selected item is from a different restaurant
-                    if (BasketManager.basketItems.isNotEmpty &&
-                        BasketManager.basketItems.first.food.restaurantId !=
-                            widget.menuItemRestaurantId) {
-                      // Show confirmation dialog to start a new basket
-                      _showNewBasketConfirmationDialog(
-                          BasketManager.basketItems.first.food.restaurantId);
-                      return; // Exit the function
-                    }
-                    _addToBasket();
-                  },
-                  text: "Add to basket"),
+              padding:
+                  const EdgeInsetsDirectional.only(start: 25, end: 25, top: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(bottom: 15.0),
+                    child: Text("Add-ons",
+                        style: Theme.of(context).textTheme.titleLarge),
+                  ),
+                  for (int i = 0; i < widget.menuItemAddons.length; i++)
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(bottom: 20),
+                      child: AddonCheckBox(
+                        value: addonCheckStates[i],
+                        onChanged: (value) => toggleAddonCheckbox(i),
+                        name: widget.menuItemAddons[i].name,
+                        price: widget.menuItemAddons[i].price,
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ],
       ),
+      persistentFooterButtons: [
+        SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsetsDirectional.symmetric(horizontal: 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove),
+                      onPressed: decrementQuantity,
+                    ),
+                    SizedBox(
+                      width: 40,
+                      child: Text(
+                        '$quantity',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: incrementQuantity,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  start: 25,
+                  end: 25,
+                ),
+                child: MainButton(
+                    onTap: () {
+                      // Check if the selected item is from a different restaurant
+                      if (BasketManager.basketItems.isNotEmpty &&
+                          BasketManager.basketItems.first.food.restaurantId !=
+                              widget.menuItemRestaurantId) {
+                        // Show confirmation dialog to start a new basket
+                        _showNewBasketConfirmationDialog(
+                            BasketManager.basketItems.first.food.restaurantId);
+                        return; // Exit the function
+                      }
+                      _addToBasket();
+                    },
+                    text: "Add to basket"),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

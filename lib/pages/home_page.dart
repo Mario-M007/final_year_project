@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
         return "🍝";
       case RestaurantCategory.asian:
         return "🍣";
-      case RestaurantCategory.libanese:
+      case RestaurantCategory.lebanese:
         return "🧆";
       default:
         return "🍕"; // Or a default icon

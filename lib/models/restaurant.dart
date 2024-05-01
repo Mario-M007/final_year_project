@@ -16,5 +16,5 @@ enum RestaurantCategory {
   american,
   italian,
   asian,
-  libanese,
+  lebanese,
 }
