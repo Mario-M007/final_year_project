@@ -5,28 +5,35 @@ class OrderService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> saveOrder(Orders order) async {
-    try {
-      await _firestore.collection('orders').doc().set({
-        'userId': order.userId,
-        'restaurantId': order.restaurantId,
-        'totalPrice': order.totalPrice,
-        'orderTime': order.orderTime,
-        'orderStatus': order.orderStatus.toString(),
-        'isForDelivery': order.isForDelivery,
-        'basket': order.basket.basketItems
-            .map((item) => {
-                  'foodId': item.food.id,
-                  'foodName': item.food.name,
-                  'quantity': item.quantity,
-                  // You can save addons and required options similarly
-                })
-            .toList(),
-      });
-    } catch (e) {
-      print('Error saving order: $e');
-      throw e;
-    }
+  try {
+    DocumentReference docRef = _firestore.collection('orders').doc();
+    String orderId = docRef.id;
+
+    await docRef.set({
+      'orderId': orderId,
+      'userId': order.userId,
+      'restaurantId': order.restaurantId,
+      'totalPrice': order.totalPrice,
+      'orderTime': order.orderTime,
+      'orderStatus': order.orderStatus.toString(),
+      'isForDelivery': order.isForDelivery,
+      'basket': order.basket.basketItems
+          .map((item) => {
+                'foodId': item.food.id,
+                'foodName': item.food.name,
+                'quantity': item.quantity,
+              })
+          .toList(),
+    });
+
+    print('Order ID: $orderId');
+
+  } catch (e) {
+    print('Error saving order: $e');
+    throw e;
   }
+}
+
 
   Future<List<Map<String, dynamic>>> getOrdersByUserId(String userId) async {
     try {
