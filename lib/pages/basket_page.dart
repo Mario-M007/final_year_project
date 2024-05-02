@@ -8,7 +8,7 @@ import 'package:final_year_project/pages/order_history_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class BasketPage extends StatefulWidget {
-  const BasketPage({Key? key}) : super(key: key);
+  const BasketPage({super.key});
 
   @override
   State<BasketPage> createState() => _BasketPageState();
@@ -63,7 +63,7 @@ class _BasketPageState extends State<BasketPage> {
       }
 
       // Create a Basket object from the list of basket items
-      Basket basket = Basket(basketItems:basketItems);
+      Basket basket = Basket(basketItems: basketItems);
 
       // Create an Order object from the basket items
       final order = Orders(
@@ -120,110 +120,116 @@ class _BasketPageState extends State<BasketPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Basket'),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        dividerTheme: const DividerThemeData(
+          color: Colors.transparent,
+        ),
       ),
-      body: basketItems.isEmpty
-          ? SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: 25, vertical: 25),
-                    child: HistoryButton(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const OrderHistoryPage(),
-                          ),
-                        );
-                      },
-                      text: "History",
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Basket'),
+        ),
+        body: basketItems.isEmpty
+            ? SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsetsDirectional.symmetric(
+                          horizontal: 25, vertical: 25),
+                      child: HistoryButton(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const OrderHistoryPage(),
+                            ),
+                          );
+                        },
+                        text: "History",
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.only(top: 70),
-                    child: Center(child: Image.asset('lib/assets/cart.png')),
-                  ),
-                  const Center(
-                    child: Text(
-                      'Add items to start a basket',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(top: 70),
+                      child: Center(child: Image.asset('lib/assets/cart.png')),
                     ),
-                  ),
-                  const Center(
-                    child: SizedBox(
-                      width: 300,
+                    const Center(
                       child: Text(
-                        'Once you add items from a restaurant or store, your basket will appear here.',
+                        'Add items to start a basket',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            )
-          : ListView.builder(
-              itemCount: basketItems.length,
-              itemBuilder: (context, index) {
-                final item = basketItems[index];
-                final totalPrice = _calculateTotalPriceForItem(item);
-                final selectedAddons = item.selectedAddons ?? [];
-                final selectedRequiredOption = item.selectedRequiredOption;
-                return ListTile(
-                  title: Text(item.food.name),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (selectedRequiredOption != null)
-                        Text(
-                            'Selected Option: ${selectedRequiredOption.name} (+\$${(selectedRequiredOption.price * item.quantity).toStringAsFixed(2)})'),
-                      if (selectedAddons.isNotEmpty)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Selected Addons:'),
-                            ...selectedAddons.map((addon) => Text(
-                                '${addon.name} (+\$${(addon.price * item.quantity).toStringAsFixed(2)})')),
-                          ],
+                    const Center(
+                      child: SizedBox(
+                        width: 300,
+                        child: Text(
+                          'Once you add items from a restaurant or store, your basket will appear here.',
+                          textAlign: TextAlign.center,
                         ),
-                      Text('Total Price: \$${totalPrice.toStringAsFixed(2)}'),
-                    ],
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.remove),
-                        onPressed: () => _decreaseQuantity(item),
                       ),
-                      Text('${item.quantity}'),
-                      IconButton(
-                        icon: const Icon(Icons.add),
-                        onPressed: () => _increaseQuantity(item),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: basketItems.isEmpty
-          ? const SizedBox.shrink()
-          : Padding(
-              padding: const EdgeInsetsDirectional.symmetric(horizontal: 25.0),
-              child: SizedBox(
-                height: 50,
-                child: MainButton(
-                  onTap: _confirmOrder,
-                  text: 'Confirm',
+                    ),
+                  ],
                 ),
+              )
+            : ListView.builder(
+                itemCount: basketItems.length,
+                itemBuilder: (context, index) {
+                  final item = basketItems[index];
+                  final totalPrice = _calculateTotalPriceForItem(item);
+                  final selectedAddons = item.selectedAddons ?? [];
+                  final selectedRequiredOption = item.selectedRequiredOption;
+                  return ListTile(
+                    title: Text(item.food.name),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (selectedRequiredOption != null)
+                          Text(
+                              'Selected Option: ${selectedRequiredOption.name} (+\$${(selectedRequiredOption.price * item.quantity).toStringAsFixed(2)})'),
+                        if (selectedAddons.isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Selected Addons:'),
+                              ...selectedAddons.map((addon) => Text(
+                                  '${addon.name} (+\$${(addon.price * item.quantity).toStringAsFixed(2)})')),
+                            ],
+                          ),
+                        Text('Total Price: \$${totalPrice.toStringAsFixed(2)}'),
+                      ],
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.remove),
+                          onPressed: () => _decreaseQuantity(item),
+                        ),
+                        Text('${item.quantity}'),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () => _increaseQuantity(item),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-            ),
+        persistentFooterButtons: [
+          basketItems.isEmpty
+              ? const SizedBox.shrink()
+              : Padding(
+                  padding:
+                      const EdgeInsetsDirectional.symmetric(horizontal: 25.0),
+                  child: MainButton(
+                    onTap: _confirmOrder,
+                    text: 'Confirm',
+                  ),
+                ),
+        ],
+      ),
     );
   }
 }
