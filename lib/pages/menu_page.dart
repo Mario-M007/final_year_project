@@ -139,7 +139,7 @@ class _MenuPageState extends State<MenuPage> {
                           );
                         },
                       ),
-                      const Divider(), // Add a divider between categories
+                      const Divider(), // Divider to separate categories
                     ],
                   );
                 },

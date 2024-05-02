@@ -122,7 +122,6 @@ class _AccountPageState extends State<AccountPage> {
                                 await authService.updateDisplayName(newName);
                               } catch (error) {
                                 log(error.toString());
-                                // Handle error if needed
                               }
                             },
                             child: const Text('Save'),

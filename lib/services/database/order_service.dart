@@ -84,7 +84,6 @@ class OrderService {
         } else {
           print(
               'Restaurant document not found for ID: ${orderQuery.docs[i]['restaurantId']}');
-          // You can decide how to handle missing restaurant data here
         }
       }
 

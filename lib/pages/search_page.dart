@@ -109,11 +109,10 @@ class _SearchPageState extends State<SearchPage> {
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                            ) // Assuming imagePath is a URL
+                            )
                           : null, // Handle restaurants without images
                       onTap: () {
-                        // Handle restaurant selection (you can access menu here)
-                        log(restaurant.id); // Print menu for demonstration
+                        log('restaurant id : ${restaurant.id}');
                         Navigator.push(
                           context,
                           MaterialPageRoute(

@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
       case RestaurantCategory.lebanese:
         return "🧆";
       default:
-        return "🍕"; // Or a default icon
+        return "🍕";
     }
   }
 
@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
           for (final restaurant in filteredRestaurants)
             RestaurantCard(
               restaurantImgPath:
-                  restaurant.imagePath, // Assuming imagePath in Restaurant
+                  restaurant.imagePath,
               restaurantName: restaurant.name,
               restaurantId: restaurant.id,
             ),

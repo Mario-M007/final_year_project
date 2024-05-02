@@ -90,7 +90,6 @@ class _BasketPageState extends State<BasketPage> {
       );
     } catch (e) {
       print('Error confirming order: $e');
-      // Handle errors accordingly
     }
   }
 

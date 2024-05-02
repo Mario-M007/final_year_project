@@ -111,10 +111,8 @@ class _MenuItemSelectionPageState extends State<MenuItemSelectionPage> {
         imagePath: widget.menuItemImagePath,
         price: widget.menuItemPrice,
         foodCategory: widget.menuItemFoodCategory,
-        availableAddons: selectedAddons,
-        requiredOptions: selectedRequiredOptionRadio != null
-            ? [widget.menuItemRequiredOptions[selectedRequiredOptionRadio!]]
-            : [],
+        availableAddons: widget.menuItemAddons,
+        requiredOptions: widget.menuItemRequiredOptions,
       ),
       quantity: quantity,
       selectedAddons: selectedAddons,

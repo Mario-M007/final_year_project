@@ -39,8 +39,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
         title: const Text('Order History'),
       ),
       body: _isLoading // Check loading state
-          ? const Center(
-              child: CircularProgressIndicator()) // Show loading indicator
+          ? const Center(child: CircularProgressIndicator())
           : orders.isEmpty
               ? const Center(child: Text('No orders found'))
               : ListView.builder(

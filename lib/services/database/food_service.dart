@@ -76,7 +76,6 @@ class FoodService {
       if (food != null) {
         retrievedFoods.add(food);
       }
-      // Handle case where food with the ID doesn't exist (already handled in getFoodById)
     }
 
     return retrievedFoods;
