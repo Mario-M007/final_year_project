@@ -45,7 +45,7 @@ class _MenuPageState extends State<MenuPage> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
           child: CustomSwitch(
-            leftText: 'pick up',
+            leftText: 'dine in',
             rightText: 'delivery',
             value: isForDelivery,
             onChanged: (newValue) {

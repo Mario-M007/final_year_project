@@ -6,7 +6,8 @@ class CustomSwitch extends StatefulWidget {
   final String leftText;
   final String rightText;
 
-  CustomSwitch({
+  const CustomSwitch({
+    super.key,
     required this.value,
     required this.onChanged,
     required this.leftText,

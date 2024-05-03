@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class MyTestWidget extends StatefulWidget {
+  const MyTestWidget({super.key});
   @override
   _MyTestWidgetState createState() => _MyTestWidgetState();
 }

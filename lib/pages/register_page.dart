@@ -52,9 +52,12 @@ class _RegisterPageState extends State<RegisterPage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text(nameController.text.isEmpty
-                ? "Please enter a name"
-                : "Passwords don't match"),
+            title: Text(
+              nameController.text.isEmpty
+                  ? "Please enter a name"
+                  : "Passwords don't match",
+              textAlign: TextAlign.center,
+            ),
           ),
         );
       }
