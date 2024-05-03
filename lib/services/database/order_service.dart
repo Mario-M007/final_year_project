@@ -5,39 +5,41 @@ class OrderService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> saveOrder(Orders order) async {
-  try {
-    DocumentReference docRef = _firestore.collection('orders').doc();
-    String orderId = docRef.id;
-
-    await docRef.set({
-      'orderId': orderId,
-      'userId': order.userId,
-      'restaurantId': order.restaurantId,
-      'totalPrice': order.totalPrice,
-      'orderTime': order.orderTime,
-      'orderStatus': order.orderStatus.toString(),
-      'isForDelivery': order.isForDelivery,
-      'basket': order.basket.basketItems
-          .map((item) => {
-                'foodId': item.food.id,
-                'foodName': item.food.name,
-                'quantity': item.quantity,
-              })
-          .toList(),
-    });
-
-    print('Order ID: $orderId');
-
-  } catch (e) {
-    print('Error saving order: $e');
-    throw e;
+    try {
+      await _firestore.collection('orders').doc().set({
+        'userId': order.userId,
+        'restaurantId': order.restaurantId,
+        'totalPrice': order.totalPrice,
+        'orderTime': order.orderTime,
+        'orderStatus': order.orderStatus.toString(),
+        'isForDelivery': order.isForDelivery,
+        'basket': order.basket.basketItems
+            .map((item) => {
+                  'foodId': item.food.id,
+                  'foodName': item.food.name,
+                  'quantity': item.quantity,
+                  'selectedAddons': item.selectedAddons
+                      ?.map((addon) => {
+                            'addonName': addon.name,
+                            'addonPrice': addon.price,
+                          })
+                      .toList(),
+                  'selectedRequiredOption': item.selectedRequiredOption != null
+                      ? {
+                          'optionName': item.selectedRequiredOption!.name,
+                          'optionPrice': item.selectedRequiredOption!.price,
+                        }
+                      : null,
+                })
+            .toList(),
+      });
+    } catch (e) {
+      print('Error saving order: $e');
+    }
   }
-}
-
 
   Future<List<Map<String, dynamic>>> getOrdersByUserId(String userId) async {
     try {
-      // Query orders directly instead of filtering afterwards
       final orderQuery = await _firestore
           .collection('orders')
           .where('userId', isEqualTo: userId)
@@ -52,7 +54,6 @@ class OrderService {
       final List<Map<String, dynamic>> ordersWithRestaurantName = [];
       final List<Future<DocumentSnapshot>> restaurantDocsFutures = [];
 
-      // Loop through retrieved documents
       for (var orderDoc in orderQuery.docs) {
         final orderId = orderDoc.id;
         final restaurantId = orderDoc['restaurantId'];
@@ -72,10 +73,8 @@ class OrderService {
         ordersWithRestaurantName.add(orderData);
       }
 
-      // Retrieve restaurant documents concurrently
       final restaurantDocs = await Future.wait(restaurantDocsFutures);
 
-      // Loop through retrieved restaurant documents
       for (var i = 0; i < restaurantDocs.length; i++) {
         final restaurantDoc = restaurantDocs[i];
         if (restaurantDoc.exists) {

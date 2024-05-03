@@ -71,8 +71,37 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                               final basketItem = basket[basketIndex];
                               final foodName = basketItem['foodName'];
                               final quantity = basketItem['quantity'];
+                              final selectedAddons =
+                                  basketItem['selectedAddons'];
+                              final selectedRequiredOption =
+                                  basketItem['selectedRequiredOption'];
 
-                              return Text('- $foodName x $quantity');
+                              String addonsText = '';
+                              if (selectedAddons != null &&
+                                  selectedAddons.isNotEmpty) {
+                                addonsText = 'Addons: ';
+                                for (final addon in selectedAddons) {
+                                  addonsText += '${addon['addonName']}, ';
+                                }
+                                addonsText = addonsText.substring(
+                                    0, addonsText.length - 2);
+                              }
+
+                              String requiredOptionText = '';
+                              if (selectedRequiredOption != null) {
+                                requiredOptionText =
+                                    'Option: ${selectedRequiredOption['optionName']}';
+                              }
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('- $foodName x $quantity'),
+                                  if (addonsText.isNotEmpty) Text(addonsText),
+                                  if (requiredOptionText.isNotEmpty)
+                                    Text(requiredOptionText),
+                                ],
+                              );
                             },
                           ),
                         ],
