@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:final_year_project/models/food.dart';
 import 'package:final_year_project/pages/menu_item_selection_page.dart';
 import 'package:final_year_project/services/database/food_service.dart';
@@ -51,7 +53,7 @@ class _MenuPageState extends State<MenuPage> {
             onChanged: (newValue) {
               setState(() {
                 isForDelivery = newValue;
-                print(isForDelivery);
+                log(isForDelivery.toString());
               });
             },
           ),

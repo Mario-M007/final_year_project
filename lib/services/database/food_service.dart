@@ -4,17 +4,11 @@ import 'package:final_year_project/models/food.dart';
 class FoodService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Get all foods
-  Future<List<Food>> getFoods() async {
-    final snapshot = await _firestore.collection('food').get();
-    return snapshot.docs.map((doc) => _fromDocument(doc)).toList();
-  }
-
-  // Get food by category
-  Future<List<Food>> getFoodsByCategory(FoodCategory category) async {
+  // Get all foods for a specific restaurant
+  Future<List<Food>> getFoodsByRestaurantId(String restaurantId) async {
     final snapshot = await _firestore
         .collection('food')
-        .where('foodCategory', isEqualTo: category.name)
+        .where('restaurantId', isEqualTo: restaurantId)
         .get();
     return snapshot.docs.map((doc) => _fromDocument(doc)).toList();
   }
@@ -55,38 +49,5 @@ class FoodService {
       availableAddons: addons,
       requiredOptions: requiredOptions,
     );
-  }
-
-  Future<Food?> getFoodById(String foodId) async {
-    final reference = _firestore.collection('food').doc(foodId);
-    final snapshot = await reference.get();
-    if (!snapshot.exists) {
-      return null; // Return null if food with the ID doesn't exist
-    }
-    return _fromDocument(snapshot);
-  }
-
-  Future<List<Food>> getFoodsByIds(List<String> foodIds) async {
-    // Create a list to store retrieved foods
-    final List<Food> retrievedFoods = [];
-
-    // Loop through each food ID
-    for (final foodId in foodIds) {
-      final food = await getFoodById(foodId);
-      if (food != null) {
-        retrievedFoods.add(food);
-      }
-    }
-
-    return retrievedFoods;
-  }
-
-  // Get all foods for a specific restaurant
-  Future<List<Food>> getFoodsByRestaurantId(String restaurantId) async {
-    final snapshot = await _firestore
-        .collection('food')
-        .where('restaurantId', isEqualTo: restaurantId)
-        .get();
-    return snapshot.docs.map((doc) => _fromDocument(doc)).toList();
   }
 }

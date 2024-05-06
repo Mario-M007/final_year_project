@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:final_year_project/models/food.dart';
 import 'package:final_year_project/models/order.dart';
 
 class OrderService {
@@ -34,62 +37,76 @@ class OrderService {
             .toList(),
       });
     } catch (e) {
-      print('Error saving order: $e');
+      log('Error saving order: $e');
     }
   }
 
-  Future<List<Map<String, dynamic>>> getOrdersByUserId(String userId) async {
+  Future<List<Orders>> getOrdersByUserId(String userId) async {
     try {
       final orderQuery = await _firestore
           .collection('orders')
           .where('userId', isEqualTo: userId)
-          .orderBy('orderTime',
-              descending: true) // Order by time for efficiency
+          .orderBy('orderTime', descending: true)
           .get();
 
       if (orderQuery.docs.isEmpty) {
         return []; // Return empty list if no orders found
       }
 
-      final List<Map<String, dynamic>> ordersWithRestaurantName = [];
-      final List<Future<DocumentSnapshot>> restaurantDocsFutures = [];
+      final List<Orders> orders = [];
 
       for (var orderDoc in orderQuery.docs) {
         final orderId = orderDoc.id;
         final restaurantId = orderDoc['restaurantId'];
-        restaurantDocsFutures
-            .add(_firestore.collection('restaurant').doc(restaurantId).get());
 
-        // Create order data without restaurant name for now
-        final orderData = {
-          'orderId': orderId,
-          'orderTime': orderDoc['orderTime'],
-          'totalPrice': orderDoc['totalPrice'],
-          'basket': orderDoc['basket'],
-          'restaurantId': restaurantId,
-          'isForDelivery': orderDoc['isForDelivery'],
-        };
+        final basketItems = (orderDoc['basket'] as List)
+            .map((item) => BasketItem(
+                  food: Food(
+                    id: item['foodId'],
+                    name: item['foodName'],
+                    restaurantId: restaurantId,
+                    description: '',
+                    imagePath: '',
+                    price: 0,
+                    foodCategory: FoodCategory.mains,
+                    availableAddons: [],
+                    requiredOptions: [],
+                  ),
+                  quantity: item['quantity'],
+                  selectedAddons: (item['selectedAddons'] as List?)
+                      ?.map((addon) => Addon(
+                            name: addon['addonName'],
+                            price: addon['addonPrice'],
+                          ))
+                      .toList(),
+                  selectedRequiredOption: item['selectedRequiredOption'] != null
+                      ? RequiredOption(
+                          name: item['selectedRequiredOption']['optionName'],
+                          price: item['selectedRequiredOption']['optionPrice'],
+                        )
+                      : null,
+                ))
+            .toList();
 
-        ordersWithRestaurantName.add(orderData);
+        final order = Orders(
+          id: orderId,
+          userId: userId,
+          restaurantId: restaurantId,
+          totalPrice: orderDoc['totalPrice'],
+          orderTime: orderDoc['orderTime'].toDate(),
+          orderStatus: OrderStatus.values.firstWhere(
+              (status) => status.toString() == orderDoc['orderStatus']),
+          isForDelivery: orderDoc['isForDelivery'],
+          basket: Basket(basketItems: basketItems),
+        );
+
+        orders.add(order);
       }
 
-      final restaurantDocs = await Future.wait(restaurantDocsFutures);
-
-      for (var i = 0; i < restaurantDocs.length; i++) {
-        final restaurantDoc = restaurantDocs[i];
-        if (restaurantDoc.exists) {
-          final restaurantName = restaurantDoc['name'];
-          ordersWithRestaurantName[i]['restaurantName'] = restaurantName;
-        } else {
-          print(
-              'Restaurant document not found for ID: ${orderQuery.docs[i]['restaurantId']}');
-        }
-      }
-
-      return ordersWithRestaurantName;
+      return orders;
     } catch (e) {
-      print('Error getting orders for user: $e');
-      throw e;
+      log('Error getting orders for user: $e');
+      rethrow;
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:final_year_project/models/order.dart';
 import 'package:final_year_project/models/restaurant.dart';
 import 'package:final_year_project/services/database/basket_manager.dart';
@@ -126,7 +128,7 @@ class _MenuItemSelectionPageState extends State<MenuItemSelectionPage> {
 
     BasketManager.setIsForDelivery(widget.isForDelivery);
 
-    print(BasketManager.basketItems);
+    log(BasketManager.basketItems.toString());
 
     // If the item was added to the basket as a new item,
     // close the current page and navigate back to the MenuPage

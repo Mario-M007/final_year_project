@@ -26,7 +26,7 @@ class Basket {
 }
 
 class Orders {
-  final String? orderId;
+  final String? id;
   final bool isForDelivery;
   final String userId;
   final String restaurantId;
@@ -36,7 +36,7 @@ class Orders {
   final OrderStatus orderStatus;
 
   Orders({
-    this.orderId,
+    this.id,
     required this.isForDelivery,
     required this.userId,
     required this.restaurantId,

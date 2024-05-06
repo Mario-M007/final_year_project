@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:final_year_project/models/order.dart';
 import 'package:final_year_project/services/database/basket_manager.dart';
@@ -89,7 +91,7 @@ class _BasketPageState extends State<BasketPage> {
         const SnackBar(content: Text('Order confirmed')),
       );
     } catch (e) {
-      print('Error confirming order: $e');
+      log('Error confirming order: $e');
     }
   }
 

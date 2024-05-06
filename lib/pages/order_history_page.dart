@@ -1,4 +1,9 @@
+import 'dart:developer';
+
+import 'package:final_year_project/models/order.dart';
+import 'package:final_year_project/models/restaurant.dart';
 import 'package:final_year_project/services/database/order_service.dart';
+import 'package:final_year_project/services/database/restaurant_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -11,24 +16,27 @@ class OrderHistoryPage extends StatefulWidget {
 
 class _OrderHistoryPageState extends State<OrderHistoryPage> {
   final _orderService = OrderService();
-  List<Map<String, dynamic>> orders = [];
-  bool _isLoading = true; // Add a loading state variable
+  final _restaurantService = RestaurantService();
+  List<Orders> orders = [];
+  List<Restaurant> restaurants = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchOrders();
+    _fetchData();
   }
 
-  Future<void> _fetchOrders() async {
+  Future<void> _fetchData() async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId != null) {
       orders = await _orderService.getOrdersByUserId(userId);
+      restaurants = await _restaurantService.getRestaurants();
     } else {
-      print('Error: User not signed in');
+      log('Error: User not signed in');
     }
     setState(() {
-      _isLoading = false; // Set loading state to false after fetching data
+      _isLoading = false;
     });
   }
 
@@ -38,20 +46,28 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
       appBar: AppBar(
         title: const Text('Order History'),
       ),
-      body: _isLoading // Check loading state
+      body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : orders.isEmpty
               ? const Center(child: Text('No orders found'))
               : ListView.builder(
                   itemCount: orders.length,
                   itemBuilder: (context, index) {
-                    final orderData = orders[index];
-                    final orderId = orderData['orderId'];
-                    final orderTime = orderData['orderTime'].toDate();
-                    final totalPrice = orderData['totalPrice'];
-                    final basket = orderData['basket'];
-                    final restaurantName = orderData['restaurantName'];
-                    final isForDelivery = orderData['isForDelivery'];
+                    final order = orders[index];
+                    final orderId = order.id;
+                    final orderTime = order.orderTime;
+                    final totalPrice = order.totalPrice;
+                    final basket = order.basket;
+                    final restaurant = restaurants.firstWhere(
+                      (restaurant) => restaurant.id == order.restaurantId,
+                      orElse: () => Restaurant(
+                          id: '',
+                          name: 'Unknown Restaurant',
+                          imagePath: '',
+                          restaurantCategory: RestaurantCategory.american),
+                    );
+                    final restaurantName = restaurant.name;
+                    final isForDelivery = order.isForDelivery;
 
                     return ListTile(
                       title: Text('Order #$orderId'),
@@ -66,22 +82,22 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                           ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: basket.length,
+                            itemCount: basket.basketItems.length,
                             itemBuilder: (context, basketIndex) {
-                              final basketItem = basket[basketIndex];
-                              final foodName = basketItem['foodName'];
-                              final quantity = basketItem['quantity'];
-                              final selectedAddons =
-                                  basketItem['selectedAddons'];
+                              final basketItem =
+                                  basket.basketItems[basketIndex];
+                              final foodName = basketItem.food.name;
+                              final quantity = basketItem.quantity;
+                              final selectedAddons = basketItem.selectedAddons;
                               final selectedRequiredOption =
-                                  basketItem['selectedRequiredOption'];
+                                  basketItem.selectedRequiredOption;
 
                               String addonsText = '';
                               if (selectedAddons != null &&
                                   selectedAddons.isNotEmpty) {
                                 addonsText = 'Addons: ';
                                 for (final addon in selectedAddons) {
-                                  addonsText += '${addon['addonName']}, ';
+                                  addonsText += '${addon.name}, ';
                                 }
                                 addonsText = addonsText.substring(
                                     0, addonsText.length - 2);
@@ -90,7 +106,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                               String requiredOptionText = '';
                               if (selectedRequiredOption != null) {
                                 requiredOptionText =
-                                    'Option: ${selectedRequiredOption['optionName']}';
+                                    'Option: ${selectedRequiredOption.name}';
                               }
 
                               return Column(

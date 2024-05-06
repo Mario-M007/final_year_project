@@ -4,7 +4,7 @@ class AuthService {
   // get instance of firebase auth
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  // get cuurent user
+  // get current user
   User? getCurrentUser() {
     return _firebaseAuth.currentUser;
   }
@@ -36,12 +36,12 @@ class AuthService {
 
   // get user name
   Future<String?> getUserDisplayName() async {
-    final user = _firebaseAuth.currentUser;
+    final user = getCurrentUser();
     return user?.displayName; // Return display name or null if not set
   }
 
   Future<void> updateDisplayName(String displayName) async {
-    final user = _firebaseAuth.currentUser;
+    final user = getCurrentUser();
     try {
       await user?.updateDisplayName(displayName);
     } catch (error) {
