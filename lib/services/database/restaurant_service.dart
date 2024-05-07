@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_year_project/models/restaurant.dart';
 
@@ -16,12 +18,12 @@ class RestaurantService {
       if (snapshot.exists) {
         return _fromDocument(snapshot);
       } else {
-        print('Restaurant not found for ID: $restaurantId');
+        log('Restaurant not found for ID: $restaurantId');
         return null;
       }
     } catch (e) {
-      print('Error getting restaurant by ID: $e');
-      throw e;
+      log('Error getting restaurant by ID: $e');
+      rethrow;
     }
   }
 
