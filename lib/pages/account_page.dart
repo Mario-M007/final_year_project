@@ -52,7 +52,7 @@ class _AccountPageState extends State<AccountPage> {
                 child: TextButton(
                   style: ButtonStyle(
                       overlayColor:
-                          MaterialStateProperty.all(Colors.transparent)),
+                          WidgetStateProperty.all(Colors.transparent)),
                   onPressed: () {},
                   child: Text(
                     _displayName,

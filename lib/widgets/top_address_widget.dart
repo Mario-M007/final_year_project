@@ -1,3 +1,4 @@
+import 'package:final_year_project/pages/map_page.dart';
 import 'package:flutter/material.dart';
 
 class TopAddressWidget extends StatelessWidget {
@@ -6,7 +7,14 @@ class TopAddressWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MapPage(),
+          ),
+        );
+      },
       child: SizedBox(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

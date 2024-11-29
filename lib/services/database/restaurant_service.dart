@@ -31,6 +31,8 @@ class RestaurantService {
     final data = doc.data()! as Map;
     final String name = data['name'] as String;
     final String imagePath = data['imagePath'] as String;
+    final double latitude = data['latitude'] as double;
+    final double longitude = data['longitude'] as double;
 
     return Restaurant(
       id: doc.id,
@@ -38,6 +40,8 @@ class RestaurantService {
       imagePath: imagePath,
       restaurantCategory: RestaurantCategory.values
           .byName(data['restaurantCategory'].toString()),
+      latitude: latitude,
+      longitude: longitude,
     );
   }
 }

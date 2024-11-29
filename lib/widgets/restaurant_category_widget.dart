@@ -19,21 +19,21 @@ class RestaurantCategoryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(
+        backgroundColor: WidgetStateProperty.all(
           backgroundColor,
         ),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
         ),
-        minimumSize: MaterialStateProperty.all(const Size(120.0, 60.0)),
-        side: MaterialStateProperty.all(
+        minimumSize: WidgetStateProperty.all(const Size(120.0, 60.0)),
+        side: WidgetStateProperty.all(
           const BorderSide(
             color: Color(0xFFDBDBDB),
           ),
         ),
-        elevation: MaterialStateProperty.all(0),
+        elevation: WidgetStateProperty.all(0),
       ),
       onPressed: onPressed,
       child: Column(

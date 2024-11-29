@@ -61,10 +61,13 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                     final restaurant = restaurants.firstWhere(
                       (restaurant) => restaurant.id == order.restaurantId,
                       orElse: () => Restaurant(
-                          id: '',
-                          name: 'Unknown Restaurant',
-                          imagePath: '',
-                          restaurantCategory: RestaurantCategory.american),
+                        id: '',
+                        name: 'Unknown Restaurant',
+                        imagePath: '',
+                        restaurantCategory: RestaurantCategory.american,
+                        latitude: 0,
+                        longitude: 0,
+                      ),
                     );
                     final restaurantName = restaurant.name;
                     final isForDelivery = order.isForDelivery;

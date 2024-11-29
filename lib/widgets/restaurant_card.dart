@@ -17,7 +17,7 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all(Colors.transparent)),
+          overlayColor: WidgetStateProperty.all(Colors.transparent)),
       onPressed: () {
         Navigator.push(
           context,
