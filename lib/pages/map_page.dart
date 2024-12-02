@@ -1,9 +1,13 @@
-import 'dart:developer';
+import 'dart:developer' as developer;
+import 'dart:math';
 
+import 'package:final_year_project/models/restaurant.dart';
 import 'package:final_year_project/services/database/restaurant_service.dart';
+import 'package:final_year_project/services/notification/local_notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 
@@ -21,27 +25,32 @@ class _MapPageState extends State<MapPage> {
   bool _serviceEnabled = false;
   PermissionStatus? _permissionGranted;
   final List<Marker> markers = [];
+  List<Restaurant> restaurants = [];
   final _restaurantService = RestaurantService();
+  final LocalNotificationService _localNotificationService =
+      LocalNotificationService();
 
   @override
   void initState() {
     super.initState();
     _initializeLocation();
-    _fetchRestaurants();
+    _addMarkers();
     _delayClusterLayer();
+    _localNotificationService.initLocalNotification();
+    _startLocationListener();
   }
 
   // This is a workaround to delay the cluster layer to avoid a bug in the package as the clusters dont show up when the markers are added at the same time
   bool _showClusterLayer = false;
   void _delayClusterLayer() async {
     await Future.delayed(
-        const Duration(milliseconds: 500)); // Adjust the duration as needed
+        const Duration(seconds: 1)); // Adjust the duration as needed
     setState(() {
       _showClusterLayer = true;
     });
   }
 
-  Future<void> _initializeLocation() async {
+  Future _initializeLocation() async {
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
@@ -72,11 +81,12 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
-  void _fetchRestaurants() async {
+  void _addMarkers() async {
     try {
-      final restaurants = await _restaurantService.getRestaurants();
+      final fetchedRestaurants = await _restaurantService.getRestaurants();
       setState(
         () {
+          restaurants = fetchedRestaurants;
           // user location
           markers.add(
             const Marker(
@@ -114,8 +124,34 @@ class _MapPageState extends State<MapPage> {
         },
       );
     } catch (error) {
-      log("Error fetching restaurants: $error");
+      developer.log("Error adding markers: $error");
     }
+  }
+
+  final Map<String, bool> _notificationShown = {};
+
+  void _startLocationListener() {
+    location.onLocationChanged.listen((LocationData currentLocation) {
+      for (var restaurant in restaurants) {
+        double distance = Geolocator.distanceBetween(
+          currentLocation.latitude!,
+          currentLocation.longitude!,
+          restaurant.latitude,
+          restaurant.longitude,
+        );
+
+        if (distance <= 100 &&
+            (_notificationShown[restaurant.name] ?? false) == false) {
+          _localNotificationService.showNotification(
+              id: Random().nextInt(1000),
+              title: "MenuMate",
+              body: "Enjoy a 20% discount only @ ${restaurant.name}");
+          _notificationShown[restaurant.name] = true;
+        } else if (distance > 100) {
+          _notificationShown[restaurant.name] = false;
+        }
+      }
+    });
   }
 
   @override
