@@ -1,8 +1,13 @@
+import 'package:final_year_project/models/restaurant.dart';
 import 'package:final_year_project/pages/map_page.dart';
 import 'package:flutter/material.dart';
 
 class TopAddressWidget extends StatelessWidget {
-  const TopAddressWidget({super.key});
+  final List<Restaurant> restaurants;
+  const TopAddressWidget({
+    super.key,
+    required this.restaurants,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +16,7 @@ class TopAddressWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const MapPage(),
+            builder: (context) => MapPage(restaurants: restaurants),
           ),
         );
       },

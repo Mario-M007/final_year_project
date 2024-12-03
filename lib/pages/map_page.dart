@@ -1,8 +1,8 @@
+import 'dart:async';
 import 'dart:developer' as developer;
 import 'dart:math';
 
 import 'package:final_year_project/models/restaurant.dart';
-import 'package:final_year_project/services/database/restaurant_service.dart';
 import 'package:final_year_project/services/notification/local_notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -12,7 +12,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  final List<Restaurant> restaurants;
+  const MapPage({super.key, required this.restaurants});
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -25,8 +26,6 @@ class _MapPageState extends State<MapPage> {
   bool _serviceEnabled = false;
   PermissionStatus? _permissionGranted;
   final List<Marker> markers = [];
-  List<Restaurant> restaurants = [];
-  final _restaurantService = RestaurantService();
   final LocalNotificationService _localNotificationService =
       LocalNotificationService();
 
@@ -35,19 +34,8 @@ class _MapPageState extends State<MapPage> {
     super.initState();
     _initializeLocation();
     _addMarkers();
-    _delayClusterLayer();
     _localNotificationService.initLocalNotification();
     _startLocationListener();
-  }
-
-  // This is a workaround to delay the cluster layer to avoid a bug in the package as the clusters dont show up when the markers are added at the same time
-  bool _showClusterLayer = false;
-  void _delayClusterLayer() async {
-    await Future.delayed(
-        const Duration(seconds: 1)); // Adjust the duration as needed
-    setState(() {
-      _showClusterLayer = true;
-    });
   }
 
   Future _initializeLocation() async {
@@ -68,60 +56,61 @@ class _MapPageState extends State<MapPage> {
     }
 
     _locationData = await location.getLocation();
+
+    setState(() {
+      _locationData = _locationData;
+    });
+
+    developer.log("$_locationData");
+
     if (_locationData != null) {
-      setState(
-        () {
-          mapController.move(
-            LatLng(_locationData!.latitude ?? 33.8938,
-                _locationData!.longitude ?? 35.5018),
-            14.0,
-          );
-        },
+      mapController.move(
+        LatLng(_locationData?.latitude ?? 33.8938,
+            _locationData?.longitude ?? 35.5018),
+        14.0,
       );
     }
   }
 
   void _addMarkers() async {
     try {
-      final fetchedRestaurants = await _restaurantService.getRestaurants();
-      setState(
-        () {
-          restaurants = fetchedRestaurants;
-          // user location
-          markers.add(
-            const Marker(
-              point: LatLng(33.878085, 35.534605),
-              child: Icon(
-                Icons.circle,
-                color: Colors.blue,
-                size: 15,
-              ),
-            ),
-          );
-          // restaurants
-          markers.addAll(
-            restaurants.map(
-              (restaurant) => Marker(
-                point: LatLng(restaurant.latitude, restaurant.longitude),
-                width: 200,
-                height: 100,
-                child: Column(
-                  children: [
-                    const Icon(
-                      Icons.location_on,
-                      color: Colors.red,
-                      size: 40,
-                    ),
-                    Text(
-                      restaurant.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
+      developer.log("USER ADDING MARKER LOCATION $_locationData");
+      // user location
+      markers.add(
+        Marker(
+          point: LatLng(
+            _locationData?.latitude ?? 33.878085,
+            _locationData?.longitude ?? 35.534605,
+          ),
+          child: const Icon(
+            Icons.circle,
+            color: Colors.blue,
+            size: 15,
+          ),
+        ),
+      );
+      // restaurants
+      markers.addAll(
+        widget.restaurants.map(
+          (restaurant) => Marker(
+            point: LatLng(restaurant.latitude, restaurant.longitude),
+            width: 200,
+            height: 100,
+            child: Column(
+              children: [
+                const Icon(
+                  Icons.location_on,
+                  color: Colors.red,
+                  size: 40,
                 ),
-              ),
+                Text(
+                  restaurant.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-          );
-        },
+          ),
+        ),
       );
     } catch (error) {
       developer.log("Error adding markers: $error");
@@ -133,7 +122,7 @@ class _MapPageState extends State<MapPage> {
 
   void _startLocationListener() {
     location.onLocationChanged.listen((LocationData currentLocation) {
-      for (var restaurant in restaurants) {
+      for (var restaurant in widget.restaurants) {
         double distanceInMeters = Geolocator.distanceBetween(
           currentLocation.latitude!,
           currentLocation.longitude!,
@@ -177,41 +166,42 @@ class _MapPageState extends State<MapPage> {
       ),
       body: FlutterMap(
         mapController: mapController,
-        options: const MapOptions(
+        options: MapOptions(
           initialZoom: 12,
-          initialCenter: LatLng(33.8938, 35.5018),
+          initialCenter: LatLng(_locationData?.latitude ?? 33.8938,
+              _locationData?.longitude ?? 35.5018),
         ),
         children: [
           TileLayer(
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'com.example.final_year_project',
           ),
-          if (_showClusterLayer)
-            MarkerClusterLayerWidget(
-              options: MarkerClusterLayerOptions(
-                size: const Size(40, 40),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(50),
-                markers: markers,
-                builder: (context, markers) {
-                  return Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.red),
-                    child: Center(
-                      child: Text(
-                        markers.length.toString(),
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            height: 1,
-                            decoration: TextDecoration.none),
-                      ),
+          // if (_showClusterLayer)
+          MarkerClusterLayerWidget(
+            options: MarkerClusterLayerOptions(
+              size: const Size(40, 40),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(50),
+              markers: markers,
+              builder: (context, markers) {
+                return Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.red),
+                  child: Center(
+                    child: Text(
+                      markers.length.toString(),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          height: 1,
+                          decoration: TextDecoration.none),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
+          ),
         ],
       ),
     );

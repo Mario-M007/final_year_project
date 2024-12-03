@@ -68,10 +68,12 @@ class _HomePageState extends State<HomePage> {
       body: ListView(
         padding: const EdgeInsetsDirectional.symmetric(horizontal: 15),
         children: [
-          const SafeArea(
+          SafeArea(
             child: Padding(
-              padding: EdgeInsetsDirectional.only(top: 30),
-              child: TopAddressWidget(),
+              padding: const EdgeInsetsDirectional.only(top: 30),
+              child: TopAddressWidget(
+                restaurants: _restaurants,
+              ),
             ),
           ),
           Padding(
@@ -117,8 +119,7 @@ class _HomePageState extends State<HomePage> {
           ),
           for (final restaurant in filteredRestaurants)
             RestaurantCard(
-              restaurantImgPath:
-                  restaurant.imagePath,
+              restaurantImgPath: restaurant.imagePath,
               restaurantName: restaurant.name,
               restaurantId: restaurant.id,
             ),
