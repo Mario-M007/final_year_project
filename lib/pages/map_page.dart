@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 import 'dart:math';
 
 import 'package:final_year_project/models/restaurant.dart';
@@ -28,22 +27,22 @@ class _MapPageState extends State<MapPage> {
   final List<Marker> markers = [];
   final LocalNotificationService _localNotificationService =
       LocalNotificationService();
+  bool _isLoading = true; // Loading state
 
   @override
   void initState() {
     super.initState();
-    _initializeLocation();
-    _addMarkers();
+    _initializeLocationAndAddMarkers();
     _localNotificationService.initLocalNotification();
     _startLocationListener();
   }
 
-  Future _initializeLocation() async {
+  Future<void> _initializeLocationAndAddMarkers() async {
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
       if (!_serviceEnabled) {
-        return null;
+        return;
       }
     }
 
@@ -51,7 +50,7 @@ class _MapPageState extends State<MapPage> {
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
       if (_permissionGranted != PermissionStatus.granted) {
-        return null;
+        return;
       }
     }
 
@@ -61,60 +60,48 @@ class _MapPageState extends State<MapPage> {
       _locationData = _locationData;
     });
 
-    developer.log("$_locationData");
-
-    if (_locationData != null) {
-      mapController.move(
-        LatLng(_locationData?.latitude ?? 33.8938,
-            _locationData?.longitude ?? 35.5018),
-        14.0,
-      );
-    }
-  }
-
-  void _addMarkers() async {
-    try {
-      developer.log("USER ADDING MARKER LOCATION $_locationData");
-      // user location
-      markers.add(
-        Marker(
-          point: LatLng(
-            _locationData?.latitude ?? 33.878085,
-            _locationData?.longitude ?? 35.534605,
-          ),
-          child: const Icon(
-            Icons.circle,
-            color: Colors.blue,
-            size: 15,
-          ),
-        ),
-      );
-      // restaurants
-      markers.addAll(
-        widget.restaurants.map(
-          (restaurant) => Marker(
-            point: LatLng(restaurant.latitude, restaurant.longitude),
-            width: 200,
-            height: 100,
-            child: Column(
-              children: [
-                const Icon(
-                  Icons.location_on,
-                  color: Colors.red,
-                  size: 40,
-                ),
-                Text(
-                  restaurant.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
+    // Add markers after initializing location
+    markers.add(
+      Marker(
+        point: LatLng(
+            _locationData!.latitude!, //?? 33.878085,
+            _locationData!.longitude! //?? 35.534605,
             ),
+        child: const Icon(
+          Icons.circle,
+          color: Colors.blue,
+          size: 15,
+        ),
+      ),
+    );
+
+    markers.addAll(
+      widget.restaurants.map(
+        (restaurant) => Marker(
+          point: LatLng(restaurant.latitude, restaurant.longitude),
+          width: 200,
+          height: 100,
+          child: Column(
+            children: [
+              const Icon(
+                Icons.location_on,
+                color: Colors.red,
+                size: 40,
+              ),
+              Text(
+                restaurant.name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
-      );
-    } catch (error) {
-      developer.log("Error adding markers: $error");
-    }
+      ),
+    );
+
+    // Set loading to false when everything is ready
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   final Map<String, bool> _notificationShown = {};
@@ -164,46 +151,52 @@ class _MapPageState extends State<MapPage> {
       appBar: AppBar(
         title: const Text('Map'),
       ),
-      body: FlutterMap(
-        mapController: mapController,
-        options: MapOptions(
-          initialZoom: 12,
-          initialCenter: LatLng(_locationData?.latitude ?? 33.8938,
-              _locationData?.longitude ?? 35.5018),
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.example.final_year_project',
-          ),
-          // if (_showClusterLayer)
-          MarkerClusterLayerWidget(
-            options: MarkerClusterLayerOptions(
-              size: const Size(40, 40),
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(50),
-              markers: markers,
-              builder: (context, markers) {
-                return Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.red),
-                  child: Center(
-                    child: Text(
-                      markers.length.toString(),
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          height: 1,
-                          decoration: TextDecoration.none),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : FlutterMap(
+              mapController: mapController,
+              options: MapOptions(
+                initialZoom: 12,
+                initialCenter: LatLng(
+                    _locationData!.latitude! //?? 33.8938
+                    ,
+                    _locationData!.longitude! //?? 35.5018
                     ),
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.example.final_year_project',
+                ),
+                MarkerClusterLayerWidget(
+                  options: MarkerClusterLayerOptions(
+                    size: const Size(40, 40),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(50),
+                    markers: markers,
+                    builder: (context, markers) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.red,
+                        ),
+                        child: Center(
+                          child: Text(
+                            markers.length.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              height: 1,
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }
