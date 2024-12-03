@@ -129,25 +129,40 @@ class _MapPageState extends State<MapPage> {
   }
 
   final Map<String, bool> _notificationShown = {};
+  final Map<String, DateTime> _lastNotificationTime = {};
 
   void _startLocationListener() {
     location.onLocationChanged.listen((LocationData currentLocation) {
       for (var restaurant in restaurants) {
-        double distance = Geolocator.distanceBetween(
+        double distanceInMeters = Geolocator.distanceBetween(
           currentLocation.latitude!,
           currentLocation.longitude!,
           restaurant.latitude,
           restaurant.longitude,
         );
 
-        if (distance <= 100 &&
+        // Check if the user is within 100 meters of the restaurant and if a notification has not been shown yet
+        if (distanceInMeters <= 100 &&
             (_notificationShown[restaurant.name] ?? false) == false) {
-          _localNotificationService.showNotification(
+          DateTime now = DateTime.now();
+          DateTime? lastNotification = _lastNotificationTime[restaurant.name];
+
+          // Check if the last notification was shown more than 30 minutes ago
+          if (lastNotification == null ||
+              now.difference(lastNotification).inMinutes > 30) {
+            // Show a local notification with a discount offer
+            _localNotificationService.showNotification(
               id: Random().nextInt(1000),
               title: "MenuMate",
-              body: "Enjoy a 20% discount only @ ${restaurant.name}");
-          _notificationShown[restaurant.name] = true;
-        } else if (distance > 100) {
+              body: "Enjoy a 20% discount only @ ${restaurant.name}",
+            );
+            // Mark the notification as shown and update the last notification time
+            _notificationShown[restaurant.name] = true;
+            _lastNotificationTime[restaurant.name] = now;
+          }
+        }
+        // Reset the notification flag if the user is more than 100 meters away from the restaurant
+        else if (distanceInMeters > 100) {
           _notificationShown[restaurant.name] = false;
         }
       }
