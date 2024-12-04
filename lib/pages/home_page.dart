@@ -1,13 +1,20 @@
+import 'dart:math';
+
 import 'package:final_year_project/models/restaurant.dart';
 import 'package:final_year_project/services/database/restaurant_service.dart';
+import 'package:final_year_project/services/notification/local_notification_service.dart';
 import 'package:final_year_project/widgets/restaurant_category_widget.dart';
 import 'package:final_year_project/widgets/restaurant_card.dart';
 import 'package:final_year_project/widgets/top_address_widget.dart';
-import 'dart:developer';
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -18,10 +25,20 @@ class _HomePageState extends State<HomePage> {
   List<Restaurant> _restaurants = []; // List to store fetched restaurants
   RestaurantCategory? _selectedCategory; // Track selected category
 
+  Location location = Location();
+  LocationData? _locationData;
+  bool _serviceEnabled = false;
+  PermissionStatus? _permissionGranted;
+  final LocalNotificationService _localNotificationService =
+      LocalNotificationService();
+
   @override
   void initState() {
     super.initState();
     _fetchRestaurants();
+    _localNotificationService.initLocalNotification();
+    _initializeLocation();
+    _startLocationListener();
   }
 
   void _fetchRestaurants() async {
@@ -31,7 +48,7 @@ class _HomePageState extends State<HomePage> {
         _restaurants = restaurants;
       });
     } catch (error) {
-      log("Error fetching restaurants: $error");
+      developer.log("Error fetching restaurants: $error");
     }
   }
 
@@ -61,6 +78,71 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> _initializeLocation() async {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+
+    setState(() {
+      _locationData = _locationData;
+    });
+  }
+
+  final Map<String, bool> _notificationShown = {};
+  final Map<String, DateTime> _lastNotificationTime = {};
+
+  void _startLocationListener() {
+    location.onLocationChanged.listen((LocationData currentLocation) {
+      for (var restaurant in _restaurants) {
+        double distanceInMeters = Geolocator.distanceBetween(
+          currentLocation.latitude!,
+          currentLocation.longitude!,
+          restaurant.latitude,
+          restaurant.longitude,
+        );
+
+        // Check if the user is within 100 meters of the restaurant and if a notification has not been shown yet
+        if (distanceInMeters <= 100 &&
+            (_notificationShown[restaurant.name] ?? false) == false) {
+          DateTime now = DateTime.now();
+          DateTime? lastNotification = _lastNotificationTime[restaurant.name];
+
+          // Check if the last notification was shown more than 30 minutes ago
+          if (lastNotification == null ||
+              now.difference(lastNotification).inMinutes > 30) {
+            // Show a local notification with a discount offer
+            _localNotificationService.showNotification(
+              id: Random().nextInt(1000),
+              title: "MenuMate",
+              body: "Enjoy a 20% discount only @ ${restaurant.name}",
+            );
+            // Mark the notification as shown and update the last notification time
+            _notificationShown[restaurant.name] = true;
+            _lastNotificationTime[restaurant.name] = now;
+          }
+        }
+        // Reset the notification flag if the user is more than 100 meters away from the restaurant
+        else if (distanceInMeters > 100) {
+          _notificationShown[restaurant.name] = false;
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final filteredRestaurants = _filteredRestaurants();
@@ -73,6 +155,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsetsDirectional.only(top: 30),
               child: TopAddressWidget(
                 restaurants: _restaurants,
+                userLocation: _locationData,
               ),
             ),
           ),
