@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:final_year_project/models/food.dart';
 import 'package:final_year_project/pages/menu_item_selection_page.dart';
+import 'package:final_year_project/pages/review_page.dart';
 import 'package:final_year_project/services/database/food_service.dart';
 import 'package:final_year_project/widgets/custom_switch.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,20 @@ class _MenuPageState extends State<MenuPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.restaurantName),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.reviews),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ReviewPage(restaurantId: widget.restaurantId),
+                ),
+              );
+            },
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
           child: CustomSwitch(
@@ -116,7 +131,7 @@ class _MenuPageState extends State<MenuPage> {
                                     menuItemAddons: food.availableAddons,
                                     menuItemRequiredOptions:
                                         food.requiredOptions,
-                                       isForDelivery: isForDelivery,
+                                    isForDelivery: isForDelivery,
                                   ),
                                 ),
                               );
@@ -132,12 +147,12 @@ class _MenuPageState extends State<MenuPage> {
                             trailing: food.imagePath == 'null'
                                 ? const SizedBox.shrink()
                                 : SizedBox(
-                                  width: 100,
-                                  height: 100,
-                                  child: Image(
+                                    width: 100,
+                                    height: 100,
+                                    child: Image(
                                       image: NetworkImage(food.imagePath),
                                     ),
-                                ),
+                                  ),
                           );
                         },
                       ),
@@ -147,7 +162,6 @@ class _MenuPageState extends State<MenuPage> {
                 },
               ),
       ),
-  
     );
   }
 }

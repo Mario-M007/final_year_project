@@ -39,6 +39,9 @@ dependencies:
   firebase_auth: ^4.19.4
   cloud_firestore: ^4.17.2
   firebase_messaging: ^14.9.4
+  firebase_storage: ^11.7.7
+  uuid: ^4.5.1
+  image_picker: ^1.1.2
   flutter_map: ^7.0.2
   location: ^7.0.0
   latlong2: ^0.9.1
