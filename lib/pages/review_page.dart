@@ -22,6 +22,7 @@ class _ReviewPageState extends State<ReviewPage> {
   bool _isLoading = true;
   bool _isSubmitting = false;
   File? _imageFile;
+  final List<double> ratingOptions = [0, 1, 2, 3, 4, 5];
 
   @override
   void initState() {
@@ -107,17 +108,25 @@ class _ReviewPageState extends State<ReviewPage> {
                           return null;
                         },
                       ),
-                      TextFormField(
-                        controller: ratingController,
+                      DropdownButtonFormField<double>(
+                        value: review?.rating,
                         decoration: const InputDecoration(labelText: 'Rating'),
-                        keyboardType: TextInputType.number,
+                        items: ratingOptions.map((double value) {
+                          return DropdownMenuItem<double>(
+                            value: value,
+                            child: Text(value
+                                .toInt()
+                                .toString()), // Convert double to int for display
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            ratingController.text = value.toString();
+                          });
+                        },
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a rating';
-                          }
-                          final rating = double.tryParse(value);
-                          if (rating == null || rating < 0 || rating > 5) {
-                            return 'Please enter a valid rating between 0 and 5';
+                          if (value == null) {
+                            return 'Please select a rating';
                           }
                           return null;
                         },
@@ -152,8 +161,6 @@ class _ReviewPageState extends State<ReviewPage> {
                                   : () {
                                       setState(() {
                                         _imageFile = null;
-                                        review =
-                                            review?.copyWith(imageUrl: null);
                                         review?.imageUrl = null;
                                         log("review: ${review?.imageUrl.toString()}");
                                       });

@@ -21,7 +21,8 @@ class ReviewService {
     if (existingReviewDoc.exists) {
       final existingReview = Review.fromMap(existingReviewDoc.data()!);
       if (imageFile != null) {
-        if (existingReview.imageUrl != null) {
+        if (existingReview.imageUrl != null &&
+            existingReview.imageUrl != review.imageUrl) {
           await _deleteImage(existingReview.imageUrl!);
         }
         final imageUrl = await _uploadImage(review.id, imageFile);
